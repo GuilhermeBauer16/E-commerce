@@ -1,4 +1,4 @@
-package com.github.GuilhermeBauer.Ecommerce.domain.model;
+package com.github.GuilhermeBauer.Ecommerce.model;
 
 import java.io.Serializable;
 import java.util.*;

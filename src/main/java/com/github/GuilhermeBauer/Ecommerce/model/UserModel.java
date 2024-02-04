@@ -1,4 +1,4 @@
-package com.github.GuilhermeBauer.Ecommerce.domain.model;
+package com.github.GuilhermeBauer.Ecommerce.model;
 
 public class UserModel {
 
