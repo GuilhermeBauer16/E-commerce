@@ -18,7 +18,7 @@ public class ProductVO implements Serializable {
     private Double price;
     private CategoryModel categoryModel;
     private Boolean isAvailable;
-    private int quantity;
+    private Integer quantity;
 
     public ProductVO() {
     }
@@ -81,7 +81,7 @@ public class ProductVO implements Serializable {
         isAvailable = available;
     }
 
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 

@@ -2,13 +2,14 @@ package com.github.GuilhermeBauer.Ecommerce.model;
 
 import jakarta.persistence.*;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
 @Entity
 @Table(name = "product")
 public class ProductModel implements Serializable {
-
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -24,7 +25,7 @@ public class ProductModel implements Serializable {
 
     @Column(name = "is_available")
     private Boolean isAvailable;
-    private int quantity;
+    private Integer quantity;
 
 //    private String image;
 
@@ -88,7 +89,7 @@ public class ProductModel implements Serializable {
         isAvailable = available;
     }
 
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
