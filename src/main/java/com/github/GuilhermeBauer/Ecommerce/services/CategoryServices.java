@@ -1,6 +1,7 @@
 package com.github.GuilhermeBauer.Ecommerce.services;
 
 import com.github.GuilhermeBauer.Ecommerce.data.vo.v1.CategoryVO;
+import com.github.GuilhermeBauer.Ecommerce.exceptions.CategoryNotFound;
 import com.github.GuilhermeBauer.Ecommerce.mapper.Mapper;
 import com.github.GuilhermeBauer.Ecommerce.model.CategoryModel;
 import com.github.GuilhermeBauer.Ecommerce.repository.CategoryRepository;
@@ -38,7 +39,7 @@ public class CategoryServices implements ServicesDatabaseContract<CategoryVO> {
     @Override
     public CategoryVO update(CategoryVO categoryVO) {
         CategoryModel entity = repository.findById(categoryVO.getId())
-                .orElseThrow(() -> new RuntimeException("No records found for that Id!"));
+                .orElseThrow(() -> new CategoryNotFound("No category was found for that ID!"));
 
         CategoryModel updatedCategory = CheckIfNotNull.updateIfNotNull(entity, categoryVO);
         return Mapper.parseObject(repository.save(updatedCategory), CategoryVO.class);
@@ -48,14 +49,14 @@ public class CategoryServices implements ServicesDatabaseContract<CategoryVO> {
     public CategoryVO findById(UUID uuid) throws Exception {
 
         CategoryModel entity = repository.findById(uuid)
-                .orElseThrow(() -> new RuntimeException("No records found for that ID!"));
+                .orElseThrow(() -> new CategoryNotFound("No category was found for that ID!"));
         return Mapper.parseObject(entity, CategoryVO.class);
     }
 
     @Override
     public void delete(UUID uuid) throws Exception {
         CategoryModel entity = repository.findById(uuid)
-                .orElseThrow(() -> new RuntimeException("No records found for that ID!"));
+                .orElseThrow(() -> new CategoryNotFound("No category was found for that ID!"));
         repository.delete(entity);
 
 

@@ -1,6 +1,9 @@
 package com.github.GuilhermeBauer.Ecommerce.services;
 
 import com.github.GuilhermeBauer.Ecommerce.data.vo.v1.ProductVO;
+import com.github.GuilhermeBauer.Ecommerce.exceptions.CategoryNotFound;
+import com.github.GuilhermeBauer.Ecommerce.exceptions.ProductNotAvailable;
+import com.github.GuilhermeBauer.Ecommerce.exceptions.ProductNotFound;
 import com.github.GuilhermeBauer.Ecommerce.mapper.Mapper;
 import com.github.GuilhermeBauer.Ecommerce.model.ProductModel;
 import com.github.GuilhermeBauer.Ecommerce.repository.ProductRepository;
@@ -24,8 +27,8 @@ public class ProductServices implements ServicesDatabaseContract<ProductVO> {
 
     @Override
     public ProductVO create(ProductVO productVO) {
-//        productVO.getCategoryModel().setName(
-//                productVO.getCategoryModel().getName().toUpperCase());
+        productVO.getCategoryModel().setName(
+                productVO.getCategoryModel().getName().toUpperCase());
         ProductModel entity = Mapper.parseObject(productVO, ProductModel.class);
         isAvailable(entity);
         return Mapper.parseObject(repository.save(entity), ProductVO.class);
@@ -36,15 +39,15 @@ public class ProductServices implements ServicesDatabaseContract<ProductVO> {
 
         Page<ProductModel> products = repository.findAll(pageable);
         List<ProductVO> productVOs = Mapper.parseObjectList(products.getContent(), ProductVO.class);
-        return new PageImpl<>(productVOs,pageable,products.getTotalElements());
+        return new PageImpl<>(productVOs, pageable, products.getTotalElements());
     }
 
     @Override
     public ProductVO update(ProductVO productVO) {
-        //        productVO.getCategoryModel().setName(
-//                productVO.getCategoryModel().getName().toUpperCase());
+        productVO.getCategoryModel().setName(
+                productVO.getCategoryModel().getName().toUpperCase());
         ProductModel productId = repository.findById(productVO.getId())
-                .orElseThrow(() -> new RuntimeException("No records found for that ID!"));
+                .orElseThrow(() -> new ProductNotFound("No product was found for that ID!"));
 
         ProductModel updatedProduct = CheckIfNotNull.updateIfNotNull(productId, productVO);
 
@@ -57,7 +60,7 @@ public class ProductServices implements ServicesDatabaseContract<ProductVO> {
     public ProductVO findById(UUID uuid) throws Exception {
 
         ProductModel productId = repository.findById(uuid)
-                .orElseThrow(() -> new RuntimeException("No records found for that ID!"));
+                .orElseThrow(() -> new ProductNotFound("No product was found for that ID!"));
 
         return Mapper.parseObject(productId, ProductVO.class);
     }
@@ -65,16 +68,16 @@ public class ProductServices implements ServicesDatabaseContract<ProductVO> {
     @Override
     public void delete(UUID uuid) throws Exception {
         ProductModel productId = repository.findById(uuid)
-                .orElseThrow(() -> new RuntimeException("No records found for that ID!"));
+                .orElseThrow(() -> new ProductNotFound("No product was found for that ID!"));
         repository.delete(productId);
 
 
     }
 
-    private ProductModel isAvailable(ProductModel productModel){
-        if(productModel.getQuantity() <= 0){
+    private ProductModel isAvailable(ProductModel productModel) {
+        if (productModel.getQuantity() <= 0) {
             productModel.setAvailable(false);
-            throw new RuntimeException("That product is not available!");
+            throw new ProductNotAvailable("That product is not available!");
         }
         productModel.setAvailable(true);
         return productModel;
