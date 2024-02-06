@@ -1,7 +1,7 @@
 package com.github.GuilhermeBauer.Ecommerce.controller;
 
 
-import com.github.GuilhermeBauer.Ecommerce.controller.contract.ControllerDatabaseContract;
+import com.github.GuilhermeBauer.Ecommerce.controller.contract.ControllerDatabasesContract;
 import com.github.GuilhermeBauer.Ecommerce.data.vo.v1.ProductVO;
 import com.github.GuilhermeBauer.Ecommerce.services.ProductServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/product/v1")
-public class ProductController implements ControllerDatabaseContract<ProductVO> {
+public class ProductController implements ControllerDatabasesContract<ProductVO> {
 
     @Autowired
     private ProductServices productServices;

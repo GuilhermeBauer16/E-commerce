@@ -5,7 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import java.util.UUID;
 
-public interface ControllerDatabaseContract <T>{
+public interface ControllerDatabasesContract<T>{
 
     ResponseEntity<T> create(T t);
 
