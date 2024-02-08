@@ -1,34 +1,29 @@
-package com.github.GuilhermeBauer.Ecommerce.model;
-import jakarta.persistence.*;
+package com.github.GuilhermeBauer.Ecommerce.data.vo.v1;
+
+import com.github.GuilhermeBauer.Ecommerce.model.ProductModel;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
-@Entity
-@Table(name = "cart_item")
-public class CartItem implements Serializable {
 
+public class CartItemVO implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id")
+    private UUID key;
     private ProductModel product;
     private Integer quantity;
 
-    public CartItem() {
+    public CartItemVO() {
     }
 
-    public UUID getId() {
-        return id;
+    public UUID getKey() {
+        return key;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
+    public void setKey(UUID key) {
+        this.key = key;
     }
 
     public ProductModel getProduct() {
@@ -51,12 +46,15 @@ public class CartItem implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CartItem cartItem = (CartItem) o;
-        return quantity == cartItem.quantity && Objects.equals(id, cartItem.id) && Objects.equals(product, cartItem.product);
+        CartItemVO cartItemVO = (CartItemVO) o;
+        return quantity == cartItemVO.quantity && Objects.equals(key, cartItemVO.key) && Objects.equals(product, cartItemVO.product);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, product, quantity);
+        return Objects.hash(key, product, quantity);
     }
+
+
+
 }

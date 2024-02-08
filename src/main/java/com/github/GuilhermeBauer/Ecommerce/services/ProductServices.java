@@ -1,7 +1,6 @@
 package com.github.GuilhermeBauer.Ecommerce.services;
-
+import com.github.GuilhermeBauer.Ecommerce.controller.ProductsController;
 import com.github.GuilhermeBauer.Ecommerce.data.vo.v1.ProductVO;
-import com.github.GuilhermeBauer.Ecommerce.exceptions.CategoryNotFound;
 import com.github.GuilhermeBauer.Ecommerce.exceptions.ProductNotAvailable;
 import com.github.GuilhermeBauer.Ecommerce.exceptions.ProductNotFound;
 import com.github.GuilhermeBauer.Ecommerce.mapper.Mapper;
@@ -14,6 +13,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 
 import java.util.List;
 import java.util.UUID;
@@ -46,7 +48,7 @@ public class ProductServices implements ServicesDatabaseContract<ProductVO> {
     public ProductVO update(ProductVO productVO) {
         productVO.getCategoryModel().setName(
                 productVO.getCategoryModel().getName().toUpperCase());
-        ProductModel productId = repository.findById(productVO.getId())
+        ProductModel productId = repository.findById(productVO.getKey())
                 .orElseThrow(() -> new ProductNotFound("No product was found for that ID!"));
 
         ProductModel updatedProduct = CheckIfNotNull.updateIfNotNull(productId, productVO);
@@ -62,7 +64,9 @@ public class ProductServices implements ServicesDatabaseContract<ProductVO> {
         ProductModel productId = repository.findById(uuid)
                 .orElseThrow(() -> new ProductNotFound("No product was found for that ID!"));
 
-        return Mapper.parseObject(productId, ProductVO.class);
+        ProductVO vo = Mapper.parseObject(productId, ProductVO.class);
+        vo.add(linkTo(methodOn(ProductsController.class).findById(uuid)).withSelfRel());
+        return vo;
     }
 
     @Override

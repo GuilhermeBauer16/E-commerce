@@ -10,7 +10,7 @@ public class ShoppingCart  implements Serializable {
     private UUID id;
     private UserModel user;
 
-    private List<CartItem> itens = new ArrayList<>();
+    private List<CartItem> items = new ArrayList<>();
 
     private Date date;
 
@@ -33,12 +33,12 @@ public class ShoppingCart  implements Serializable {
         this.user = user;
     }
 
-    public List<CartItem> getItens() {
-        return itens;
+    public List<CartItem> getItems() {
+        return items;
     }
 
-    public void setItens(List<CartItem> itens) {
-        this.itens = itens;
+    public void setItems(List<CartItem> items) {
+        this.items = items;
     }
 
     public Date getDate() {
@@ -54,11 +54,11 @@ public class ShoppingCart  implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ShoppingCart that = (ShoppingCart) o;
-        return Objects.equals(id, that.id) && Objects.equals(user, that.user) && Objects.equals(itens, that.itens) && Objects.equals(date, that.date);
+        return Objects.equals(id, that.id) && Objects.equals(user, that.user) && Objects.equals(items, that.items) && Objects.equals(date, that.date);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, user, itens, date);
+        return Objects.hash(id, user, items, date);
     }
 }

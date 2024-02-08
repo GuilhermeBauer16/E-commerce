@@ -18,7 +18,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/product/v1")
-public class ProductController implements ControllerDatabasesContract<ProductVO> {
+public class ProductsController implements ControllerDatabasesContract<ProductVO> {
 
     @Autowired
     private ProductServices productServices;

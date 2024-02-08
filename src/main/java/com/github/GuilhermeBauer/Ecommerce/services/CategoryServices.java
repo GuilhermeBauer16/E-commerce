@@ -38,7 +38,7 @@ public class CategoryServices implements ServicesDatabaseContract<CategoryVO> {
 
     @Override
     public CategoryVO update(CategoryVO categoryVO) {
-        CategoryModel entity = repository.findById(categoryVO.getId())
+        CategoryModel entity = repository.findById(categoryVO.getKey())
                 .orElseThrow(() -> new CategoryNotFound("No category was found for that ID!"));
 
         CategoryModel updatedCategory = CheckIfNotNull.updateIfNotNull(entity, categoryVO);

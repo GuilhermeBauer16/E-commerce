@@ -1,17 +1,18 @@
 package com.github.GuilhermeBauer.Ecommerce.data.vo.v1;
 
 import com.github.GuilhermeBauer.Ecommerce.model.CategoryModel;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
 
-public class ProductVO implements Serializable {
+public class ProductVO extends RepresentationModel<ProductVO> implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
-    private UUID id;
+    private UUID key;
     private String name;
     private String description;
     private String Branch;
@@ -25,12 +26,12 @@ public class ProductVO implements Serializable {
     //    private String image;
 
 
-    public UUID getId() {
-        return id;
+    public UUID getKey() {
+        return key;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
+    public void setKey(UUID key) {
+        this.key = key;
     }
 
     public String getName() {
@@ -94,12 +95,12 @@ public class ProductVO implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ProductVO productVO = (ProductVO) o;
-        return quantity == productVO.quantity && Objects.equals(id, productVO.id) && Objects.equals(name, productVO.name) && Objects.equals(description, productVO.description) && Objects.equals(Branch, productVO.Branch) && Objects.equals(price, productVO.price) && Objects.equals(categoryModel, productVO.categoryModel) && Objects.equals(isAvailable, productVO.isAvailable);
+        return quantity == productVO.quantity && Objects.equals(key, productVO.key) && Objects.equals(name, productVO.name) && Objects.equals(description, productVO.description) && Objects.equals(Branch, productVO.Branch) && Objects.equals(price, productVO.price) && Objects.equals(categoryModel, productVO.categoryModel) && Objects.equals(isAvailable, productVO.isAvailable);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, Branch, price, categoryModel, isAvailable, quantity);
+        return Objects.hash(key, name, description, Branch, price, categoryModel, isAvailable, quantity);
     }
 }
 

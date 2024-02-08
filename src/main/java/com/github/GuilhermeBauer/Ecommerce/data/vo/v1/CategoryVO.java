@@ -5,19 +5,19 @@ import java.util.UUID;
 
 public class CategoryVO {
 
-    private UUID id;
+    private UUID key;
 
     private String name;
 
     public CategoryVO() {
     }
 
-    public UUID getId() {
-        return id;
+    public UUID getKey() {
+        return key;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
+    public void setKey(UUID key) {
+        this.key = key;
     }
 
     public String getName() {
@@ -33,11 +33,11 @@ public class CategoryVO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CategoryVO that = (CategoryVO) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name);
+        return Objects.equals(key, that.key) && Objects.equals(name, that.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name);
+        return Objects.hash(key, name);
     }
 }
