@@ -1,10 +1,7 @@
 package com.github.GuilhermeBauer.Ecommerce.handler;
 
 
-import com.github.GuilhermeBauer.Ecommerce.exceptions.CategoryNotFound;
-import com.github.GuilhermeBauer.Ecommerce.exceptions.ExceptionResponse;
-import com.github.GuilhermeBauer.Ecommerce.exceptions.ProductNotAvailable;
-import com.github.GuilhermeBauer.Ecommerce.exceptions.ProductNotFound;
+import com.github.GuilhermeBauer.Ecommerce.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -21,10 +18,11 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 
     @ExceptionHandler({CategoryNotFound.class,
             ProductNotFound.class,
-    ProductNotAvailable.class})
+            ProductNotAvailable.class,
+            InsufficientQuantityAvailable.class})
     public final ResponseEntity<ExceptionResponse> handlerNotFoundException(
             Exception ex,
-            WebRequest webRequest){
+            WebRequest webRequest) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(
                 ex.getMessage(),
                 webRequest.getDescription(false),

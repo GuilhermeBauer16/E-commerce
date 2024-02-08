@@ -6,6 +6,7 @@ import com.github.GuilhermeBauer.Ecommerce.services.CartItemServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -31,8 +32,11 @@ public class CartItemController implements ControllerDatabasesContract<CartItemV
     }
 
     @Override
-    public ResponseEntity<Page<CartItemVO>> findAll(Pageable pageable) {
-        return null;
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Page<CartItemVO>> findAll(
+            @PageableDefault(size = 20,page = 0, sort = "quantity") Pageable pageable) {
+        Page<CartItemVO> allCartItems = cartItemServices.findAll(pageable);
+        return ResponseEntity.ok(allCartItems);
     }
 
     @Override
@@ -45,13 +49,17 @@ public class CartItemController implements ControllerDatabasesContract<CartItemV
     }
 
     @Override
-
-    public ResponseEntity<CartItemVO> findById(UUID uuid) throws Exception {
-        return null;
+    @GetMapping(value = "/{uuid}",
+    produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CartItemVO> findById(@PathVariable(value = "uuid") UUID uuid) throws Exception {
+        CartItemVO cartItemId = cartItemServices.findById(uuid);
+        return ResponseEntity.ok(cartItemId);
     }
 
     @Override
-    public ResponseEntity<?> delete(UUID uuid) throws Exception {
-        return null;
+    @DeleteMapping(value = "/{uuid}")
+    public ResponseEntity<?> delete(@PathVariable(value = "uuid") UUID uuid) throws Exception {
+        cartItemServices.delete(uuid);
+        return ResponseEntity.noContent().build();
     }
 }
