@@ -12,7 +12,7 @@ public class ProductVO extends RepresentationModel<ProductVO> implements Seriali
 
     @Serial
     private static final long serialVersionUID = 1L;
-    private UUID key;
+    private UUID id;
     private String name;
     private String description;
     private String Branch;
@@ -26,12 +26,12 @@ public class ProductVO extends RepresentationModel<ProductVO> implements Seriali
     //    private String image;
 
 
-    public UUID getKey() {
-        return key;
+    public UUID getId() {
+        return id;
     }
 
-    public void setKey(UUID key) {
-        this.key = key;
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -95,12 +95,12 @@ public class ProductVO extends RepresentationModel<ProductVO> implements Seriali
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ProductVO productVO = (ProductVO) o;
-        return quantity == productVO.quantity && Objects.equals(key, productVO.key) && Objects.equals(name, productVO.name) && Objects.equals(description, productVO.description) && Objects.equals(Branch, productVO.Branch) && Objects.equals(price, productVO.price) && Objects.equals(categoryModel, productVO.categoryModel) && Objects.equals(isAvailable, productVO.isAvailable);
+        return quantity == productVO.quantity && Objects.equals(id, productVO.id) && Objects.equals(name, productVO.name) && Objects.equals(description, productVO.description) && Objects.equals(Branch, productVO.Branch) && Objects.equals(price, productVO.price) && Objects.equals(categoryModel, productVO.categoryModel) && Objects.equals(isAvailable, productVO.isAvailable);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(key, name, description, Branch, price, categoryModel, isAvailable, quantity);
+        return Objects.hash(id, name, description, Branch, price, categoryModel, isAvailable, quantity);
     }
 }
 

@@ -2,17 +2,18 @@ package com.github.GuilhermeBauer.Ecommerce.services.contract;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.EntityModel;
 
 
 import java.util.UUID;
 
 public interface ServicesDatabaseContract<T> {
 
-    T create(T t);
+    T create(T t) throws Exception;
 
-    Page<T> findAll(Pageable pageable);
+    Page<EntityModel<T>> findAll(Pageable pageable) throws Exception;
 
-    T update(T t);
+    T update(T t) throws Exception;
 
     T findById(UUID uuid) throws Exception;
 

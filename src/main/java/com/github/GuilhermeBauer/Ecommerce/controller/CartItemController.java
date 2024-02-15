@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,16 +27,16 @@ public class CartItemController implements ControllerDatabasesContract<CartItemV
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE,
     consumes = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
-    public ResponseEntity<CartItemVO> create(@RequestBody CartItemVO cartItemVO) {
+    public ResponseEntity<CartItemVO> create(@RequestBody CartItemVO cartItemVO) throws Exception {
         CartItemVO cartItem = cartItemServices.create(cartItemVO);
         return new ResponseEntity<>(cartItem, HttpStatus.CREATED);
     }
 
     @Override
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Page<CartItemVO>> findAll(
+    public ResponseEntity<Page<EntityModel<CartItemVO>>> findAll(
             @PageableDefault(size = 20,page = 0, sort = "quantity") Pageable pageable) {
-        Page<CartItemVO> allCartItems = cartItemServices.findAll(pageable);
+        Page<EntityModel<CartItemVO>> allCartItems = cartItemServices.findAll(pageable);
         return ResponseEntity.ok(allCartItems);
     }
 
@@ -43,7 +44,7 @@ public class CartItemController implements ControllerDatabasesContract<CartItemV
     @PutMapping(produces = MediaType.APPLICATION_JSON_VALUE,
             consumes= MediaType.APPLICATION_JSON_VALUE)
     @Transactional
-    public ResponseEntity<CartItemVO> update(@RequestBody CartItemVO cartItemVO) {
+    public ResponseEntity<CartItemVO> update(@RequestBody CartItemVO cartItemVO) throws Exception {
         CartItemVO updatedCartItem = cartItemServices.update(cartItemVO);
         return ResponseEntity.ok(updatedCartItem);
     }

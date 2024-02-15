@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,23 +28,23 @@ public class ProductsController implements ControllerDatabasesContract<ProductVO
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
-    public ResponseEntity<ProductVO> create(@RequestBody ProductVO productVO) {
+    public ResponseEntity<ProductVO> create(@RequestBody ProductVO productVO) throws Exception {
         ProductVO createdProduct = productServices.create(productVO);
         return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
     }
 
     @Override
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Page<ProductVO>> findAll(
+    public ResponseEntity<Page<EntityModel<ProductVO>>> findAll(
             @PageableDefault(page = 0, size = 20, sort = "name") Pageable pageable) {
-        Page<ProductVO> products = productServices.findAll(pageable);
+        Page<EntityModel<ProductVO>> products = productServices.findAll(pageable);
         return ResponseEntity.ok(products);
     }
 
     @Override
     @PutMapping(produces = MediaType.APPLICATION_JSON_VALUE,
     consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ProductVO> update(@RequestBody ProductVO productVO) {
+    public ResponseEntity<ProductVO> update(@RequestBody ProductVO productVO) throws Exception {
         ProductVO updatedProduct = productServices.update(productVO);
         return ResponseEntity.ok(updatedProduct);
     }

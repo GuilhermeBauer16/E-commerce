@@ -20,24 +20,24 @@ public class Mapper {
     static {
         // to entity for VO
         mapper.createTypeMap(ProductModel.class, ProductVO.class)
-                .addMapping(ProductModel::getId, ProductVO::setKey);
+                .addMapping(ProductModel::getId, ProductVO::setId);
 
         mapper.createTypeMap(CategoryModel.class, CategoryVO.class)
-                .addMapping(CategoryModel::getId,CategoryVO::setKey);
+                .addMapping(CategoryModel::getId,CategoryVO::setId);
 
         mapper.createTypeMap(CartItem.class, CartItemVO.class)
-                .addMapping(CartItem::getId , CartItemVO::setKey);
+                .addMapping(CartItem::getId , CartItemVO::setId);
 
         // to VO for entity
 
         mapper.createTypeMap(ProductVO.class , ProductModel.class)
-                .addMapping(ProductVO::getKey, ProductModel::setId);
+                .addMapping(ProductVO::getId, ProductModel::setId);
 
         mapper.createTypeMap(CategoryVO.class, CategoryModel.class)
-                .addMapping(CategoryVO::getKey , CategoryModel::setId);
+                .addMapping(CategoryVO::getId, CategoryModel::setId);
 
         mapper.createTypeMap(CartItemVO.class , CartItem.class)
-                .addMapping(CartItemVO::getKey, CartItem::setId);
+                .addMapping(CartItemVO::getId, CartItem::setId);
 
 
 

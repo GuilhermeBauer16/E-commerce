@@ -1,29 +1,27 @@
 package com.github.GuilhermeBauer.Ecommerce.data.vo.v1;
 
 import com.github.GuilhermeBauer.Ecommerce.model.ProductModel;
+import org.springframework.hateoas.RepresentationModel;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
 
-public class CartItemVO implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 1L;
+public class CartItemVO extends RepresentationModel<CartItemVO> implements Serializable {
 
-    private UUID key;
+    private UUID id;
     private ProductModel product;
     private Integer quantity;
 
     public CartItemVO() {
     }
 
-    public UUID getKey() {
-        return key;
+    public UUID getId() {
+        return id;
     }
 
-    public void setKey(UUID key) {
-        this.key = key;
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public ProductModel getProduct() {
@@ -47,12 +45,12 @@ public class CartItemVO implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CartItemVO cartItemVO = (CartItemVO) o;
-        return quantity == cartItemVO.quantity && Objects.equals(key, cartItemVO.key) && Objects.equals(product, cartItemVO.product);
+        return quantity == cartItemVO.quantity && Objects.equals(id, cartItemVO.id) && Objects.equals(product, cartItemVO.product);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(key, product, quantity);
+        return Objects.hash(id, product, quantity);
     }
 
 

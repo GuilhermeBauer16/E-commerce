@@ -1,7 +1,9 @@
 package com.github.GuilhermeBauer.Ecommerce.services;
 
+import com.github.GuilhermeBauer.Ecommerce.controller.CategoryController;
 import com.github.GuilhermeBauer.Ecommerce.data.vo.v1.CategoryVO;
 import com.github.GuilhermeBauer.Ecommerce.exceptions.CategoryNotFound;
+import com.github.GuilhermeBauer.Ecommerce.exceptions.RequiredObjectsNullException;
 import com.github.GuilhermeBauer.Ecommerce.mapper.Mapper;
 import com.github.GuilhermeBauer.Ecommerce.model.CategoryModel;
 import com.github.GuilhermeBauer.Ecommerce.repository.CategoryRepository;
@@ -11,38 +13,67 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 
 @Service
 public class CategoryServices implements ServicesDatabaseContract<CategoryVO> {
     @Autowired
     private CategoryRepository repository;
 
+
     @Override
-    public CategoryVO create(CategoryVO categoryVO) {
+    public CategoryVO create(CategoryVO categoryVO) throws Exception {
+        if (categoryVO == null){
+            throw new RequiredObjectsNullException();
+        }
         categoryVO.setName(categoryVO.getName().toUpperCase());
         CategoryModel entity = Mapper.parseObject(categoryVO, CategoryModel.class);
-        return Mapper.parseObject(repository.save(entity), CategoryVO.class);
+        CategoryVO vo = Mapper.parseObject(repository.save(entity), CategoryVO.class);
+        vo.add(linkTo(methodOn(CategoryController.class).findById(categoryVO.getId())).withSelfRel());
+        return vo;
     }
 
     @Override
-    public Page<CategoryVO> findAll(Pageable pageable) {
+    public Page<EntityModel<CategoryVO>> findAll(Pageable pageable) {
         Page<CategoryModel> allCategory = repository.findAll(pageable);
         List<CategoryVO> categoryVOS = Mapper.parseObjectList(allCategory.getContent(), CategoryVO.class);
-        return new PageImpl<>(categoryVOS, pageable, allCategory.getTotalElements());
+        List<EntityModel<CategoryVO>> categoryEntities = categoryVOS.stream()
+                .map(categoryVO -> {
+                    try {
+                        Link selfLink = WebMvcLinkBuilder.linkTo(
+                                WebMvcLinkBuilder.methodOn(CategoryController.class)
+                                        .findById(categoryVO.getId())).withSelfRel();
+                        return EntityModel.of(categoryVO, selfLink);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }).collect(Collectors.toList());
+        return new PageImpl<>(categoryEntities, pageable, allCategory.getTotalElements());
 
     }
 
     @Override
-    public CategoryVO update(CategoryVO categoryVO) {
-        CategoryModel entity = repository.findById(categoryVO.getKey())
+    public CategoryVO update(CategoryVO categoryVO) throws Exception {
+        if (categoryVO == null){
+            throw new RequiredObjectsNullException();
+        }
+        CategoryModel entity = repository.findById(categoryVO.getId())
                 .orElseThrow(() -> new CategoryNotFound("No category was found for that ID!"));
 
         CategoryModel updatedCategory = CheckIfNotNull.updateIfNotNull(entity, categoryVO);
-        return Mapper.parseObject(repository.save(updatedCategory), CategoryVO.class);
+        CategoryVO vo = Mapper.parseObject(repository.save(updatedCategory), CategoryVO.class);
+        vo.add(linkTo(methodOn(CategoryController.class).findById(categoryVO.getId())).withSelfRel());
+        return vo;
     }
 
     @Override
@@ -50,7 +81,10 @@ public class CategoryServices implements ServicesDatabaseContract<CategoryVO> {
 
         CategoryModel entity = repository.findById(uuid)
                 .orElseThrow(() -> new CategoryNotFound("No category was found for that ID!"));
-        return Mapper.parseObject(entity, CategoryVO.class);
+        CategoryVO vo = Mapper.parseObject(entity, CategoryVO.class);
+        vo.add(linkTo(methodOn(CategoryController.class).findById(uuid)).withSelfRel());
+        return vo;
+
     }
 
     @Override

@@ -19,8 +19,8 @@ public class ProductModel implements Serializable {
     private String description;
     private String Branch;
     private Double price;
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "category_id")
+    @ManyToOne
+    @JoinColumn(name = "category_id" )
     private CategoryModel categoryModel;
 
     @Column(name = "is_available")
