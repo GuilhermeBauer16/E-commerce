@@ -15,12 +15,14 @@ public class MockCategory {
     public CategoryModel mockCategoryEntity(UUID uuid){
         CategoryModel categoryModel = new CategoryModel();
         categoryModel.setName("SHOES");
+        categoryModel.setId(uuid);
         return categoryModel;
     }
 
     public CategoryVO mockCategoryVO(UUID uuid){
         CategoryVO categoryVO = new CategoryVO();
         categoryVO.setName("SHOES");
+        categoryVO.setId(uuid);
         return categoryVO;
     }
 

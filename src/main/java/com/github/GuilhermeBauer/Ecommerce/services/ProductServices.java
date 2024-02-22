@@ -4,6 +4,7 @@ import com.github.GuilhermeBauer.Ecommerce.controller.ProductsController;
 import com.github.GuilhermeBauer.Ecommerce.data.vo.v1.ProductVO;
 import com.github.GuilhermeBauer.Ecommerce.exceptions.ProductNotAvailable;
 import com.github.GuilhermeBauer.Ecommerce.exceptions.ProductNotFound;
+import com.github.GuilhermeBauer.Ecommerce.exceptions.RequiredObjectsNullException;
 import com.github.GuilhermeBauer.Ecommerce.mapper.Mapper;
 import com.github.GuilhermeBauer.Ecommerce.model.CategoryModel;
 import com.github.GuilhermeBauer.Ecommerce.model.ProductModel;
@@ -40,7 +41,9 @@ public class ProductServices implements ServicesDatabaseContract<ProductVO> {
 
     @Override
     public ProductVO create(ProductVO productVO) throws Exception {
-
+        if (productVO == null) {
+            throw new RequiredObjectsNullException();
+        }
         CategoryModel categoryName = categoryRepository.findByName(productVO.getCategoryModel().getName().toUpperCase());
         productVO.setCategoryModel(categoryName);
         ProductModel entity = Mapper.parseObject(productVO, ProductModel.class);
@@ -74,6 +77,11 @@ public class ProductServices implements ServicesDatabaseContract<ProductVO> {
 
     @Override
     public ProductVO update(ProductVO productVO) throws Exception {
+
+        if (productVO == null) {
+            throw new RequiredObjectsNullException();
+        }
+
         if (productVO.getCategoryModel() != null) {
             CategoryModel categoryName = categoryRepository.findByName(productVO.getCategoryModel().getName().toUpperCase());
             productVO.setCategoryModel(categoryName);
