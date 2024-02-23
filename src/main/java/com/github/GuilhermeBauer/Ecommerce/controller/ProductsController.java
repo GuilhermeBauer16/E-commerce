@@ -36,7 +36,7 @@ public class ProductsController implements ControllerDatabasesContract<ProductVO
     @Override
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<EntityModel<ProductVO>>> findAll(
-            @PageableDefault(page = 0, size = 20, sort = "name") Pageable pageable) {
+            @PageableDefault(page = 0, size = 20, sort = "name") Pageable pageable) throws Exception {
         Page<EntityModel<ProductVO>> products = productServices.findAll(pageable);
         return ResponseEntity.ok(products);
     }

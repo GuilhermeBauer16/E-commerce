@@ -17,6 +17,8 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -44,20 +46,20 @@ public class CategoryServices implements ServicesDatabaseContract<CategoryVO> {
     }
 
     @Override
-    public Page<EntityModel<CategoryVO>> findAll(Pageable pageable) {
+    public Page<EntityModel<CategoryVO>> findAll(Pageable pageable) throws Exception {
         Page<CategoryModel> allCategory = repository.findAll(pageable);
         List<CategoryVO> categoryVOS = Mapper.parseObjectList(allCategory.getContent(), CategoryVO.class);
-        List<EntityModel<CategoryVO>> categoryEntities = categoryVOS.stream()
-                .map(categoryVO -> {
-                    try {
-                        Link selfLink = WebMvcLinkBuilder.linkTo(
-                                WebMvcLinkBuilder.methodOn(CategoryController.class)
-                                        .findById(categoryVO.getId())).withSelfRel();
-                        return EntityModel.of(categoryVO, selfLink);
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }).collect(Collectors.toList());
+        List<EntityModel<CategoryVO>> categoryEntities = new ArrayList<>();
+        for (CategoryVO vo : categoryVOS) {
+
+            Link selfLink = linkTo(
+                    methodOn(CategoryController.class)
+                            .findById(vo.getId())).withSelfRel();
+
+
+            EntityModel<CategoryVO> apply = EntityModel.of(vo, selfLink);
+            categoryEntities.add(apply);
+        }
         return new PageImpl<>(categoryEntities, pageable, allCategory.getTotalElements());
 
     }

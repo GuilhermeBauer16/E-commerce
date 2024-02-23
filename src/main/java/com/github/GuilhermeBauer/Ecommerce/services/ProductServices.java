@@ -2,6 +2,7 @@ package com.github.GuilhermeBauer.Ecommerce.services;
 
 import com.github.GuilhermeBauer.Ecommerce.controller.ProductsController;
 import com.github.GuilhermeBauer.Ecommerce.data.vo.v1.ProductVO;
+import com.github.GuilhermeBauer.Ecommerce.exceptions.CategoryNotFound;
 import com.github.GuilhermeBauer.Ecommerce.exceptions.ProductNotAvailable;
 import com.github.GuilhermeBauer.Ecommerce.exceptions.ProductNotFound;
 import com.github.GuilhermeBauer.Ecommerce.exceptions.RequiredObjectsNullException;
@@ -25,6 +26,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -54,23 +56,21 @@ public class ProductServices implements ServicesDatabaseContract<ProductVO> {
     }
 
     @Override
-    public Page<EntityModel<ProductVO>> findAll(Pageable pageable) {
+    public Page<EntityModel<ProductVO>> findAll(Pageable pageable) throws Exception {
         Page<ProductModel> products = repository.findAll(pageable);
         List<ProductVO> productVos = Mapper.parseObjectList(products.getContent(), ProductVO.class);
 
-        List<EntityModel<ProductVO>> productEntities = productVos.stream()
-                .map(productVO -> {
-                    try {
-                        Link selfLink = WebMvcLinkBuilder.linkTo(
-                                        WebMvcLinkBuilder.methodOn(ProductsController.class)
-                                                .findById(productVO.getId()))
-                                .withSelfRel();
-                        return EntityModel.of(productVO, selfLink);
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                })
-                .collect(Collectors.toList());
+        List<EntityModel<ProductVO>> productEntities = new ArrayList<>();
+        for (ProductVO productVo : productVos) {
+
+            Link selfLink = linkTo(
+                    methodOn(ProductsController.class)
+                            .findById(productVo.getId()))
+                    .withSelfRel();
+
+            EntityModel<ProductVO> apply = EntityModel.of(productVo, selfLink);
+            productEntities.add(apply);
+        }
 
         return new PageImpl<>(productEntities, pageable, products.getTotalElements());
     }
@@ -82,10 +82,13 @@ public class ProductServices implements ServicesDatabaseContract<ProductVO> {
             throw new RequiredObjectsNullException();
         }
 
-        if (productVO.getCategoryModel() != null) {
-            CategoryModel categoryName = categoryRepository.findByName(productVO.getCategoryModel().getName().toUpperCase());
-            productVO.setCategoryModel(categoryName);
+        if (productVO.getCategoryModel() == null) {
+            throw new CategoryNotFound("No category was found for that Product!");
         }
+
+        CategoryModel categoryName = categoryRepository.findByName(productVO.getCategoryModel().getName().toUpperCase());
+        productVO.setCategoryModel(categoryName);
+
         ProductModel productId = repository.findById(productVO.getId())
                 .orElseThrow(() -> new ProductNotFound("No product was found for that ID!"));
 
@@ -119,7 +122,7 @@ public class ProductServices implements ServicesDatabaseContract<ProductVO> {
 
     }
 
-    private void isAvailable(ProductModel productModel) {
+    public void isAvailable(ProductModel productModel) {
         if (productModel.getQuantity() <= 0) {
             productModel.setAvailable(false);
             throw new ProductNotAvailable("That product is not available!");

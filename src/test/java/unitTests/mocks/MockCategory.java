@@ -29,7 +29,7 @@ public class MockCategory {
     public List<CategoryModel> mockCategoryEntityList(){
         List<CategoryModel> categoryModelList = new ArrayList<>();
         for (int i = 0; i < 14; i++) {
-            categoryModelList.add(mockCategoryEntity(UUID.randomUUID()));
+            categoryModelList.add(mockCategoryEntity(UUID.fromString("270c51f2-0acf-4ca6-bfc3-1c654f0ddd17")));
 
         }
         return categoryModelList;
@@ -38,7 +38,7 @@ public class MockCategory {
     public List<CategoryVO> mockCategoryVOList(){
         List<CategoryVO> categoryVOList = new ArrayList<>();
         for (int i = 0; i < 14; i++) {
-            categoryVOList.add(mockCategoryVO(UUID.randomUUID()));
+            categoryVOList.add(mockCategoryVO(UUID.fromString("270c51f2-0acf-4ca6-bfc3-1c654f0ddd17")));
 
         }
         return categoryVOList;

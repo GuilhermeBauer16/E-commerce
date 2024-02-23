@@ -34,7 +34,7 @@ public class CategoryController implements ControllerDatabasesContract<CategoryV
     @Override
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<EntityModel<CategoryVO>>> findAll(
-            @PageableDefault(size = 10,page = 0, sort = "name") Pageable pageable) {
+            @PageableDefault(size = 10,page = 0, sort = "name") Pageable pageable) throws Exception {
         Page<EntityModel<CategoryVO>> allCategory = categoryServices.findAll(pageable);
 
         return ResponseEntity.ok(allCategory);
