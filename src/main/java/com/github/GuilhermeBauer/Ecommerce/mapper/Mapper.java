@@ -1,11 +1,7 @@
 package com.github.GuilhermeBauer.Ecommerce.mapper;
 
-import com.github.GuilhermeBauer.Ecommerce.data.vo.v1.CartItemVO;
-import com.github.GuilhermeBauer.Ecommerce.data.vo.v1.CategoryVO;
-import com.github.GuilhermeBauer.Ecommerce.data.vo.v1.ProductVO;
-import com.github.GuilhermeBauer.Ecommerce.model.CartItem;
-import com.github.GuilhermeBauer.Ecommerce.model.CategoryModel;
-import com.github.GuilhermeBauer.Ecommerce.model.ProductModel;
+import com.github.GuilhermeBauer.Ecommerce.data.vo.v1.*;
+import com.github.GuilhermeBauer.Ecommerce.model.*;
 import org.modelmapper.ModelMapper;
 
 import java.util.ArrayList;
@@ -28,6 +24,12 @@ public class Mapper {
         mapper.createTypeMap(CartItem.class, CartItemVO.class)
                 .addMapping(CartItem::getId , CartItemVO::setId);
 
+        mapper.createTypeMap(PermissionModel.class, PermissionVO.class)
+                .addMapping(PermissionModel::getId , PermissionVO::setId);
+
+        mapper.createTypeMap(UserModel.class, UserVO.class)
+                .addMapping(UserModel::getId , UserVO::setId);
+
         // to VO for entity
 
         mapper.createTypeMap(ProductVO.class , ProductModel.class)
@@ -38,6 +40,12 @@ public class Mapper {
 
         mapper.createTypeMap(CartItemVO.class , CartItem.class)
                 .addMapping(CartItemVO::getId, CartItem::setId);
+
+        mapper.createTypeMap(PermissionVO.class , PermissionModel.class)
+                .addMapping(PermissionVO::getId, PermissionModel::setId);
+
+        mapper.createTypeMap(UserVO.class , UserModel.class)
+                .addMapping(UserVO::getId, UserModel::setId);
 
 
 

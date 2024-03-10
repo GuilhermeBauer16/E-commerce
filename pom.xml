@@ -17,6 +17,7 @@
         <java.version>17</java.version>
         <model-mapper.version>3.1.1</model-mapper.version>
         <springdoc.version>2.3.0</springdoc.version>
+        <java-jwt.version>3.18.3</java-jwt.version>
     </properties>
     <dependencies>
         <!-- Spring boot dependency -->
@@ -95,12 +96,29 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Test dependency -->
+        <!-- Swagger dependency -->
 
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>${springdoc.version}</version>
+        </dependency>
+
+        <!-- Security dependency -->
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>${java-jwt.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
         </dependency>
 
 

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/cartItems")
+@RequestMapping("/api/cartItems")
 public class CartItemController implements ControllerDatabasesContract<CartItemVO> {
 
     @Autowired

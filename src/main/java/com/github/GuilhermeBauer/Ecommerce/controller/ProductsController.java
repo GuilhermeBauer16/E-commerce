@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/product/v1")
+@RequestMapping("/api/product")
 public class ProductsController implements ControllerDatabasesContract<ProductVO> {
 
     @Autowired

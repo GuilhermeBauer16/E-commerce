@@ -1,5 +1,6 @@
-package com.github.GuilhermeBauer.Ecommerce.model;
+package com.github.GuilhermeBauer.Ecommerce.data.vo.v1;
 
+import com.github.GuilhermeBauer.Ecommerce.model.PermissionModel;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -9,29 +10,24 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
 
-@Entity
-@Table(name = "users")
-public class UserModel  implements UserDetails, Serializable {
+public class UserVO implements UserDetails, Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "user_name", unique = true)
     private String username;
-    @Column(name = "full_name")
+
     private String fullName;
     private String password;
 
-    @Column(name = "account_non_expired")
+
     private Boolean accountNonExpired;
 
-    @Column(name = "account_non_locked")
+
     private Boolean accountNonLocked;
 
 
-    @Column(name = "credentials_non_expired")
+
     private Boolean credentialsNonExpired;
 
     private Boolean enabled;
@@ -41,8 +37,7 @@ public class UserModel  implements UserDetails, Serializable {
             , inverseJoinColumns = {@JoinColumn(name = "id_permission")})
     private List<PermissionModel> permissions;
 
-
-    public UserModel() {
+    public UserVO() {
     }
 
     public List<String> getRoles(){
@@ -158,8 +153,8 @@ public class UserModel  implements UserDetails, Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UserModel userModel = (UserModel) o;
-        return Objects.equals(id, userModel.id) && Objects.equals(username, userModel.username) && Objects.equals(fullName, userModel.fullName) && Objects.equals(password, userModel.password) && Objects.equals(accountNonExpired, userModel.accountNonExpired) && Objects.equals(accountNonLocked, userModel.accountNonLocked) && Objects.equals(credentialsNonExpired, userModel.credentialsNonExpired) && Objects.equals(enabled, userModel.enabled) && Objects.equals(permissions, userModel.permissions);
+        UserVO userVO = (UserVO) o;
+        return Objects.equals(id, userVO.id) && Objects.equals(username, userVO.username) && Objects.equals(fullName, userVO.fullName) && Objects.equals(password, userVO.password) && Objects.equals(accountNonExpired, userVO.accountNonExpired) && Objects.equals(accountNonLocked, userVO.accountNonLocked) && Objects.equals(credentialsNonExpired, userVO.credentialsNonExpired) && Objects.equals(enabled, userVO.enabled) && Objects.equals(permissions, userVO.permissions);
     }
 
     @Override
