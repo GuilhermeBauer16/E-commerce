@@ -1,6 +1,8 @@
 package com.github.GuilhermeBauer.Ecommerce.mapper;
 
 import com.github.GuilhermeBauer.Ecommerce.data.vo.v1.*;
+import com.github.GuilhermeBauer.Ecommerce.data.vo.v1.user.PermissionVO;
+import com.github.GuilhermeBauer.Ecommerce.data.vo.v1.user.UserVO;
 import com.github.GuilhermeBauer.Ecommerce.model.*;
 import org.modelmapper.ModelMapper;
 

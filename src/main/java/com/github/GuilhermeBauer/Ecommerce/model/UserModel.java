@@ -36,10 +36,14 @@ public class UserModel  implements UserDetails, Serializable {
 
     private Boolean enabled;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_permission", joinColumns = {@JoinColumn(name = "id_user")}
-            , inverseJoinColumns = {@JoinColumn(name = "id_permission")})
-    private List<PermissionModel> permissions;
+//    @ManyToMany(fetch = FetchType.EAGER)
+//    @JoinTable(name = "user_permission", joinColumns = {@JoinColumn(name = "id_user")}
+//            , inverseJoinColumns = {@JoinColumn(name = "id_permission")})
+//    private List<UserPermissionModel> permissions;
+
+    @ManyToOne
+    @JoinColumn(name = "permission_id")
+    private PermissionModel permission;
 
 
     public UserModel() {
@@ -47,15 +51,12 @@ public class UserModel  implements UserDetails, Serializable {
 
     public List<String> getRoles(){
         List<String> roles = new ArrayList<>();
-        for(PermissionModel personModel: permissions){
-            roles.add(personModel.getDescription());
-
-        }
+        roles.add(permission.getDescription());
         return roles;
     }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.permissions;
+        return Collections.singleton(new SimpleGrantedAuthority(permission.getDescription()));
     }
 
     @Override
@@ -146,12 +147,12 @@ public class UserModel  implements UserDetails, Serializable {
         this.enabled = enabled;
     }
 
-    public List<PermissionModel> getPermissions() {
-        return permissions;
+    public PermissionModel getPermission() {
+        return permission;
     }
 
-    public void setPermissions(List<PermissionModel> permissions) {
-        this.permissions = permissions;
+    public void setPermission(PermissionModel permission) {
+        this.permission = permission;
     }
 
     @Override
@@ -159,11 +160,11 @@ public class UserModel  implements UserDetails, Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserModel userModel = (UserModel) o;
-        return Objects.equals(id, userModel.id) && Objects.equals(username, userModel.username) && Objects.equals(fullName, userModel.fullName) && Objects.equals(password, userModel.password) && Objects.equals(accountNonExpired, userModel.accountNonExpired) && Objects.equals(accountNonLocked, userModel.accountNonLocked) && Objects.equals(credentialsNonExpired, userModel.credentialsNonExpired) && Objects.equals(enabled, userModel.enabled) && Objects.equals(permissions, userModel.permissions);
+        return Objects.equals(id, userModel.id) && Objects.equals(username, userModel.username) && Objects.equals(fullName, userModel.fullName) && Objects.equals(password, userModel.password) && Objects.equals(accountNonExpired, userModel.accountNonExpired) && Objects.equals(accountNonLocked, userModel.accountNonLocked) && Objects.equals(credentialsNonExpired, userModel.credentialsNonExpired) && Objects.equals(enabled, userModel.enabled) && Objects.equals(permission, userModel.permission);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, fullName, password, accountNonExpired, accountNonLocked, credentialsNonExpired, enabled, permissions);
+        return Objects.hash(id, username, fullName, password, accountNonExpired, accountNonLocked, credentialsNonExpired, enabled, permission);
     }
 }

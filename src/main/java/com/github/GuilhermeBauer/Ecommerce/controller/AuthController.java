@@ -2,6 +2,7 @@ package com.github.GuilhermeBauer.Ecommerce.controller;
 
 
 import com.github.GuilhermeBauer.Ecommerce.data.vo.v1.security.AccountCredentialsVO;
+import com.github.GuilhermeBauer.Ecommerce.model.UserModel;
 import com.github.GuilhermeBauer.Ecommerce.services.AuthServices;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,8 @@ public class AuthController {
 
     @SuppressWarnings("rawtypes")
     @Operation(summary = "Authenticates a user and returns a token")
-    @PostMapping(value = "/signin")
-    public ResponseEntity signin(@RequestBody AccountCredentialsVO data) {
+    @PostMapping(value = "/LogIn")
+    public ResponseEntity signin(@RequestBody UserModel data) {
         if (checkIfParamsIsNotNull(data))
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid client request!");
         var token = authServices.signin(data);
@@ -39,12 +40,13 @@ public class AuthController {
         return token;
     }
 
+
     private boolean checkIfParamsIsNotNull(String username, String refreshToken) {
         return refreshToken == null || refreshToken.isBlank() ||
                 username == null || username.isBlank();
     }
 
-    private boolean checkIfParamsIsNotNull(AccountCredentialsVO data) {
+    private boolean checkIfParamsIsNotNull(UserModel data) {
         return data == null || data.getUsername() == null || data.getUsername().isBlank()
                 || data.getPassword() == null || data.getPassword().isBlank();
     }

@@ -1,7 +1,6 @@
-package com.github.GuilhermeBauer.Ecommerce.data.vo.v1;
+package com.github.GuilhermeBauer.Ecommerce.data.vo.v1.user;
 
 import com.github.GuilhermeBauer.Ecommerce.model.PermissionModel;
-import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,35 +26,31 @@ public class UserVO implements UserDetails, Serializable {
     private Boolean accountNonLocked;
 
 
-
     private Boolean credentialsNonExpired;
 
     private Boolean enabled;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_permission", joinColumns = {@JoinColumn(name = "id_user")}
-            , inverseJoinColumns = {@JoinColumn(name = "id_permission")})
-    private List<PermissionModel> permissions;
+    //    private List<UserPermissionModel> permissions;
+    private PermissionModel permission;
 
     public UserVO() {
     }
 
-    public List<String> getRoles(){
+    public List<String> getRoles() {
         List<String> roles = new ArrayList<>();
-        for(PermissionModel personModel: permissions){
-            roles.add(personModel.getDescription());
-
-        }
+        roles.add(permission.getDescription());
         return roles;
     }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.permissions;
+        return Collections.singleton(new SimpleGrantedAuthority(permission.getDescription()));
     }
+
 
     @Override
     public String getPassword() {
-        return this.password ;
+        return this.password;
     }
 
     @Override
@@ -90,7 +85,6 @@ public class UserVO implements UserDetails, Serializable {
     public void setId(UUID id) {
         this.id = id;
     }
-
 
 
     public void setUsername(String username) {
@@ -141,12 +135,12 @@ public class UserVO implements UserDetails, Serializable {
         this.enabled = enabled;
     }
 
-    public List<PermissionModel> getPermissions() {
-        return permissions;
+    public PermissionModel getPermission() {
+        return permission;
     }
 
-    public void setPermissions(List<PermissionModel> permissions) {
-        this.permissions = permissions;
+    public void setPermission(PermissionModel permission) {
+        this.permission = permission;
     }
 
     @Override
@@ -154,11 +148,11 @@ public class UserVO implements UserDetails, Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserVO userVO = (UserVO) o;
-        return Objects.equals(id, userVO.id) && Objects.equals(username, userVO.username) && Objects.equals(fullName, userVO.fullName) && Objects.equals(password, userVO.password) && Objects.equals(accountNonExpired, userVO.accountNonExpired) && Objects.equals(accountNonLocked, userVO.accountNonLocked) && Objects.equals(credentialsNonExpired, userVO.credentialsNonExpired) && Objects.equals(enabled, userVO.enabled) && Objects.equals(permissions, userVO.permissions);
+        return Objects.equals(id, userVO.id) && Objects.equals(username, userVO.username) && Objects.equals(fullName, userVO.fullName) && Objects.equals(password, userVO.password) && Objects.equals(accountNonExpired, userVO.accountNonExpired) && Objects.equals(accountNonLocked, userVO.accountNonLocked) && Objects.equals(credentialsNonExpired, userVO.credentialsNonExpired) && Objects.equals(enabled, userVO.enabled) && Objects.equals(permission, userVO.permission);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, fullName, password, accountNonExpired, accountNonLocked, credentialsNonExpired, enabled, permissions);
+        return Objects.hash(id, username, fullName, password, accountNonExpired, accountNonLocked, credentialsNonExpired, enabled, permission);
     }
 }

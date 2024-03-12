@@ -1,7 +1,8 @@
 package com.github.GuilhermeBauer.Ecommerce.controller;
 
 import com.github.GuilhermeBauer.Ecommerce.controller.contract.ControllerDatabasesContract;
-import com.github.GuilhermeBauer.Ecommerce.data.vo.v1.UserVO;
+import com.github.GuilhermeBauer.Ecommerce.data.vo.v1.user.UserVO;
+import com.github.GuilhermeBauer.Ecommerce.model.UserModel;
 import com.github.GuilhermeBauer.Ecommerce.services.AuthServices;
 import com.github.GuilhermeBauer.Ecommerce.services.UserServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class UserController implements ControllerDatabasesContract<UserVO> {
     private AuthServices logInServices;
 
     @Override
-    @PostMapping
+    @PostMapping("/signIn")
     public ResponseEntity<UserVO> create(@RequestBody UserVO userVO) {
         try {
             UserVO createdUser = userServices.create(userVO);

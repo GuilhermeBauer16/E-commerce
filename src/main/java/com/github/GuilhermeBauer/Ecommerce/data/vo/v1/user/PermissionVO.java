@@ -1,9 +1,11 @@
-package com.github.GuilhermeBauer.Ecommerce.data.vo.v1;
+package com.github.GuilhermeBauer.Ecommerce.data.vo.v1.user;
+
+import org.springframework.hateoas.RepresentationModel;
 
 import java.util.Objects;
 import java.util.UUID;
 
-public class PermissionVO {
+public class PermissionVO extends RepresentationModel<PermissionVO> {
 
     private UUID id;
     private String description;
