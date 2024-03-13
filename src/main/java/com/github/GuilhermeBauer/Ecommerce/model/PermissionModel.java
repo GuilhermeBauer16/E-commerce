@@ -11,6 +11,8 @@ public class PermissionModel implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
+    @Column(name= "description", unique = true)
     private String description;
 
     public PermissionModel() {
@@ -33,6 +35,11 @@ public class PermissionModel implements GrantedAuthority {
     }
 
     @Override
+    public String getAuthority() {
+        return this.description;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -43,10 +50,5 @@ public class PermissionModel implements GrantedAuthority {
     @Override
     public int hashCode() {
         return Objects.hash(id, description);
-    }
-
-    @Override
-    public String getAuthority() {
-        return this.description;
     }
 }

@@ -6,12 +6,11 @@ import com.github.GuilhermeBauer.Ecommerce.services.PermissionServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -21,32 +20,41 @@ public class PermissionController implements ControllerDatabasesContract<Permiss
 
     @Autowired
     private PermissionServices permissionServices;
+
     @Override
     @PostMapping
     public ResponseEntity<PermissionVO> create(@RequestBody PermissionVO permissionVO) throws Exception {
         PermissionVO permissionCreated = permissionServices.create(permissionVO);
-        return ResponseEntity.ok(permissionCreated);
+        return new ResponseEntity<>(permissionCreated, HttpStatus.CREATED);
     }
 
     @Override
-    public ResponseEntity<Page<EntityModel<PermissionVO>>> findAll(Pageable pageable) throws Exception {
-        return null;
+    @GetMapping
+    public ResponseEntity<Page<EntityModel<PermissionVO>>> findAll(
+            @PageableDefault(page = 0, size = 20, sort = "description")Pageable pageable) throws Exception {
+        Page<EntityModel<PermissionVO>> allPermissions = permissionServices.findAll(pageable);
+        return ResponseEntity.ok(allPermissions);
     }
 
     @Override
-    public ResponseEntity<PermissionVO> update(PermissionVO permissionVO) throws Exception {
-        return null;
+    @PutMapping
+    public ResponseEntity<PermissionVO> update(@RequestBody PermissionVO permissionVO) throws Exception {
+        PermissionVO updatedPermission = permissionServices.update(permissionVO);
+        return ResponseEntity.ok(updatedPermission);
     }
 
     @Override
-    public ResponseEntity<PermissionVO> findById(UUID uuid) throws Exception {
+    @GetMapping(value = "/{uuid}")
+    public ResponseEntity<PermissionVO> findById(@PathVariable(value="uuid")UUID uuid) throws Exception {
 
         PermissionVO permission = permissionServices.findById(uuid);
         return ResponseEntity.ok(permission);
     }
 
     @Override
-    public ResponseEntity<?> delete(UUID uuid) throws Exception {
-        return null;
+    @DeleteMapping(value = "/{uuid}")
+    public ResponseEntity<?> delete(@PathVariable(value= "uuid") UUID uuid) throws Exception {
+        permissionServices.delete(uuid);
+        return ResponseEntity.noContent().build();
     }
 }

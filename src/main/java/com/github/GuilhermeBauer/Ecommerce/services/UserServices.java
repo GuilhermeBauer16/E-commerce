@@ -13,13 +13,9 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -35,15 +31,19 @@ public class UserServices implements UserDetailsService {
     private PermissionRepository permissionRepository;
 
 
-
     public UserServices(UserRepository repository) {
         this.userRepository = repository;
     }
 
     public UserVO create(UserVO userVO) throws Exception {
+
+        if (userVO == null || userVO.getPermission() == null || userVO.getPermission().getDescription() == null) {
+            throw new IllegalArgumentException("UserVO or its permission is null");
+        }
         userVO.setPassword(encoder.encode(userVO.getPassword()));
         PermissionModel permission = permissionRepository.findById(userVO.getPermission().getId()).orElseThrow(() -> new RuntimeException());
-//        PermissionModel permission = permissionRepository.findByDescription(userVO.getPermission().getDescription());
+//        PermissionModel permission = permissionRepository.findByDescription(userVO.getPermission().getDescription().toUpperCase());
+        System.out.println(permission);
         userVO.setPermission(permission);
         UserModel entity = Mapper.parseObject(userVO, UserModel.class);
         return Mapper.parseObject(userRepository.save(entity), UserVO.class);
@@ -73,33 +73,13 @@ public class UserServices implements UserDetailsService {
 
     }
 
-//    private UserVO encodePassword(UserVO userVO) {
-//        Map<String, PasswordEncoder> encoders = new HashMap<>();
-//
-//        Pbkdf2PasswordEncoder pbkdf2Encoder = new Pbkdf2PasswordEncoder(
-//                "", 8, 18500,
-//                Pbkdf2PasswordEncoder.SecretKeyFactoryAlgorithm.PBKDF2WithHmacSHA256);
-//
-//        encoders.put("pbkdf2", pbkdf2Encoder);
-//        DelegatingPasswordEncoder passwordEncoder = new DelegatingPasswordEncoder("pbkdf2", encoders);
-//        passwordEncoder.setDefaultPasswordEncoderForMatches(passwordEncoder);
-//        String encodedPassword = passwordEncoder.encode(userVO.getPassword());
-//        if (encodedPassword.startsWith("{pbkdf2}")) {
-//            encodedPassword = encodedPassword.substring("{pbkdf2}".length());
-//        }
-//        userVO.setPassword(encodedPassword);
-//
-//        return userVO;
-//
-//    }
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         var user = userRepository.findByUsername(username);
-        if(user != null) {
+        if (user != null) {
             return user;
 
-        }else {
+        } else {
 
             throw new UsernameNotFoundException("Username: " + username + "not found!");
 
