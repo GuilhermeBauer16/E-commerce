@@ -1,6 +1,7 @@
 package com.github.GuilhermeBauer.Ecommerce.data.vo.v1.user;
 
 import com.github.GuilhermeBauer.Ecommerce.model.PermissionModel;
+import org.springframework.hateoas.RepresentationModel;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,7 +10,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
 
-public class UserVO implements UserDetails, Serializable {
+public class UserVO extends RepresentationModel<UserVO> implements UserDetails, Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     private UUID id;

@@ -6,17 +6,13 @@ import com.github.GuilhermeBauer.Ecommerce.model.PermissionModel;
 import com.github.GuilhermeBauer.Ecommerce.model.UserModel;
 import com.github.GuilhermeBauer.Ecommerce.repository.PermissionRepository;
 import com.github.GuilhermeBauer.Ecommerce.repository.UserRepository;
+import com.github.GuilhermeBauer.Ecommerce.util.CheckIfNotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.hateoas.EntityModel;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.UUID;
 
 @Service
 public class UserServices implements UserDetailsService {
@@ -46,17 +42,22 @@ public class UserServices implements UserDetailsService {
         System.out.println(permission);
         userVO.setPermission(permission);
         UserModel entity = Mapper.parseObject(userVO, UserModel.class);
-        return Mapper.parseObject(userRepository.save(entity), UserVO.class);
-    }
-
-
-    public Page<EntityModel<UserVO>> findAll(Pageable pageable) throws Exception {
-        return null;
+        UserVO vo = Mapper.parseObject(userRepository.save(entity), UserVO.class);
+//        vo.add(linkTo(methodOn(UserController.class).findById(userVO.getId())).withSelfRel());
+        return vo;
     }
 
 
     public UserVO update(UserVO userVO) throws Exception {
-        return null;
+
+        UserModel username = userRepository.findByUsername(userVO.getUsername());
+        if( username == null){
+            throw new UsernameNotFoundException("Not records founds for that username!");
+        }
+        UserModel updatedUser = CheckIfNotNull.updateIfNotNull(username, userVO);
+        UserVO vo = Mapper.parseObject(userRepository.save(updatedUser), UserVO.class);
+//        vo.add(linkTo(methodOn(UserController.class).findById(userVO.getId())).withSelfRel());
+        return vo;
     }
 
 
@@ -69,7 +70,10 @@ public class UserServices implements UserDetailsService {
         return Mapper.parseObject(entity, UserVO.class);
     }
 
-    public void delete(UUID uuid) throws Exception {
+    public void delete(String username) throws Exception {
+        UserModel user = userRepository.findByUsername(username);
+        userRepository.delete(user);
+
 
     }
 

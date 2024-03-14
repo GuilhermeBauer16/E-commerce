@@ -2,12 +2,10 @@ package com.github.GuilhermeBauer.Ecommerce.services;
 
 import com.github.GuilhermeBauer.Ecommerce.controller.PermissionController;
 import com.github.GuilhermeBauer.Ecommerce.controller.ProductsController;
-import com.github.GuilhermeBauer.Ecommerce.data.vo.v1.ProductVO;
 import com.github.GuilhermeBauer.Ecommerce.data.vo.v1.user.PermissionVO;
 import com.github.GuilhermeBauer.Ecommerce.exceptions.ProductNotFound;
 import com.github.GuilhermeBauer.Ecommerce.mapper.Mapper;
 import com.github.GuilhermeBauer.Ecommerce.model.PermissionModel;
-import com.github.GuilhermeBauer.Ecommerce.model.ProductModel;
 import com.github.GuilhermeBauer.Ecommerce.repository.PermissionRepository;
 import com.github.GuilhermeBauer.Ecommerce.services.contract.ServicesDatabaseContract;
 import com.github.GuilhermeBauer.Ecommerce.util.CheckIfNotNull;

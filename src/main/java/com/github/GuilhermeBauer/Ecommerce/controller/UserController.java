@@ -1,14 +1,9 @@
 package com.github.GuilhermeBauer.Ecommerce.controller;
 
-import com.github.GuilhermeBauer.Ecommerce.controller.contract.ControllerDatabasesContract;
 import com.github.GuilhermeBauer.Ecommerce.data.vo.v1.user.UserVO;
-import com.github.GuilhermeBauer.Ecommerce.model.UserModel;
 import com.github.GuilhermeBauer.Ecommerce.services.AuthServices;
 import com.github.GuilhermeBauer.Ecommerce.services.UserServices;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +12,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("api/user")
-public class UserController implements ControllerDatabasesContract<UserVO> {
+public class UserController {
 
     @Autowired
     private UserServices userServices;
@@ -25,7 +20,6 @@ public class UserController implements ControllerDatabasesContract<UserVO> {
     @Autowired
     private AuthServices logInServices;
 
-    @Override
     @PostMapping("/signIn")
     public ResponseEntity<UserVO> create(@RequestBody UserVO userVO) {
         try {
@@ -36,24 +30,21 @@ public class UserController implements ControllerDatabasesContract<UserVO> {
         }
     }
 
-    @Override
-    public ResponseEntity<Page<EntityModel<UserVO>>> findAll(Pageable pageable) throws Exception {
-        return null;
+    @PutMapping
+    public ResponseEntity<UserVO> update(@RequestBody UserVO userVO) throws Exception {
+        UserVO updatedUser = userServices.update(userVO);
+        return ResponseEntity.ok(updatedUser);
     }
 
-    @Override
-    public ResponseEntity<UserVO> update(UserVO userVO) throws Exception {
-        return null;
-    }
 
-    @Override
     public ResponseEntity<UserVO> findById(UUID uuid) throws Exception {
         return null;
     }
 
-    @Override
-    public ResponseEntity<?> delete(UUID uuid) throws Exception {
-        return null;
+    @DeleteMapping(value = "/{user}")
+    public ResponseEntity<?> delete(@PathVariable(value="user")String username) throws Exception {
+        userServices.delete(username);
+        return ResponseEntity.noContent().build();
     }
 
 
