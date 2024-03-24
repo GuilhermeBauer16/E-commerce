@@ -5,7 +5,9 @@ the user will log in and use the E-commerce functions like buying a product and 
 
 ## Working example
 
-![Screenshot from 2024-03-24 18-37-43](https://github.com/GuilhermeBauer16/E-commerce/assets/123701893/20a77b4b-a5b2-42f0-9535-d4d9d4f7fd36)
+![Screenshot from 2024-03-24 18-40-13](https://github.com/GuilhermeBauer16/E-commerce/assets/123701893/13931538-892c-4ac8-87ba-a28e28c52207)
+
+
 
 ## Sending 
 ![Screenshot from 2024-03-24 17-37-19](https://github.com/GuilhermeBauer16/E-commerce/assets/123701893/41fe1c6b-12ba-488c-b481-80e5fa305ff8)
