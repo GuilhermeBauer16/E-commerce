@@ -5,7 +5,8 @@ the user will log in and use the E-commerce functions like buying a product and 
 
 ## Working example
 
-![Screenshot from 2024-01-30 19-55-07](https://github.com/GuilhermeBauer16/Product-Catalog/assets/123701893/c4d0917c-3584-461c-a740-5db62acf529f)
+![Screenshot from 2024-03-24 18-37-43](https://github.com/GuilhermeBauer16/E-commerce/assets/123701893/20a77b4b-a5b2-42f0-9535-d4d9d4f7fd36)
+
 ## Sending 
 ![Screenshot from 2024-03-24 17-37-19](https://github.com/GuilhermeBauer16/E-commerce/assets/123701893/41fe1c6b-12ba-488c-b481-80e5fa305ff8)
 
@@ -17,14 +18,29 @@ the user will log in and use the E-commerce functions like buying a product and 
 
 ## Learnings 
 
-In that project, I learned how to use Spring Security to create a JWT(JSON Web Token ) token to structure a login system. To encrypt the passwords inside the Database I used the PBKDF2(password-based Key Derivation Function 2). I chose that password encryptor for the capability of customizing and for the security that PBKDF2 has. I also learned how to create unit tests using Mockito and JUnit. I already made a post about my learning about Mockito and JUnit. I will share the link below.
+In that project, I learned how to use Spring Security to create a JWT(JSON Web Token ) token to structure a login system. To encrypt the passwords inside the Database I used the PBKDF2(password-based Key Derivation Function 2). I chose that password encryptor for the capability of customizing and for the security that PBKDF2 has. I also learned how to create unit tests using Mockito and JUnit.
 
 ## Functionalities
 
 
-* Login
+* Login of the user with Spring security authentication.
+
+* Creation of User
+
+* Updating of User
+
+
+### Cart shopping 
+* Addition of cart shopping item divided between:    
+  * product.
+  * quantity.
+   
+* Registered cart shopping edition.     
   
-* Adding a product in a cart shopping
+* Deletion of cart shopping.
+
+* Viewing registered cart shopping.
+
 
 ### Product
 * Addition of product divided between:    
@@ -32,7 +48,6 @@ In that project, I learned how to use Spring Security to create a JWT(JSON Web T
   * price.
   * description.
   * category.
-
   * branch.
   * quantity.
    
@@ -53,5 +68,11 @@ In that project, I learned how to use Spring Security to create a JWT(JSON Web T
 
 * Viewing registered category.
 
+* Viewing registered category.
+
 ## Swagger
 * link: http://localhost:8080/swagger-ui/index.html
+  
+## Author
+ www.linkedin.com/in/guilherme-bauer-desenvolvedor
+
