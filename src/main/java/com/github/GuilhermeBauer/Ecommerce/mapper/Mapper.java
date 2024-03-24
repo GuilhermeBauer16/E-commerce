@@ -23,14 +23,15 @@ public class Mapper {
         mapper.createTypeMap(CategoryModel.class, CategoryVO.class)
                 .addMapping(CategoryModel::getId,CategoryVO::setId);
 
-        mapper.createTypeMap(CartItem.class, CartItemVO.class)
-                .addMapping(CartItem::getId , CartItemVO::setId);
+        mapper.createTypeMap(CartItemModel.class, CartItemVO.class)
+                .addMapping(CartItemModel::getId , CartItemVO::setId);
 
         mapper.createTypeMap(PermissionModel.class, PermissionVO.class)
                 .addMapping(PermissionModel::getId , PermissionVO::setId);
 
         mapper.createTypeMap(UserModel.class, UserVO.class)
                 .addMapping(UserModel::getId , UserVO::setId);
+
 
         // to VO for entity
 
@@ -40,17 +41,14 @@ public class Mapper {
         mapper.createTypeMap(CategoryVO.class, CategoryModel.class)
                 .addMapping(CategoryVO::getId, CategoryModel::setId);
 
-        mapper.createTypeMap(CartItemVO.class , CartItem.class)
-                .addMapping(CartItemVO::getId, CartItem::setId);
+        mapper.createTypeMap(CartItemVO.class , CartItemModel.class)
+                .addMapping(CartItemVO::getId, CartItemModel::setId);
 
         mapper.createTypeMap(PermissionVO.class , PermissionModel.class)
                 .addMapping(PermissionVO::getId, PermissionModel::setId);
 
         mapper.createTypeMap(UserVO.class , UserModel.class)
                 .addMapping(UserVO::getId, UserModel::setId);
-
-
-
 
 
     }

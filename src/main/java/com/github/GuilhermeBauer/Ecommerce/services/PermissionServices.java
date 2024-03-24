@@ -1,9 +1,10 @@
 package com.github.GuilhermeBauer.Ecommerce.services;
 
-import com.github.GuilhermeBauer.Ecommerce.controller.PermissionController;
 import com.github.GuilhermeBauer.Ecommerce.controller.ProductsController;
+import com.github.GuilhermeBauer.Ecommerce.controller.security.PermissionController;
 import com.github.GuilhermeBauer.Ecommerce.data.vo.v1.user.PermissionVO;
-import com.github.GuilhermeBauer.Ecommerce.exceptions.ProductNotFound;
+import com.github.GuilhermeBauer.Ecommerce.exceptions.PermissionNotFound;
+import com.github.GuilhermeBauer.Ecommerce.exceptions.RequiredObjectsNullException;
 import com.github.GuilhermeBauer.Ecommerce.mapper.Mapper;
 import com.github.GuilhermeBauer.Ecommerce.model.PermissionModel;
 import com.github.GuilhermeBauer.Ecommerce.repository.PermissionRepository;
@@ -27,11 +28,17 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @Service
 public class PermissionServices implements ServicesDatabaseContract<PermissionVO> {
 
+    private static final String PERMISSION_NOT_FOUND_MESSAGE = "No record found by that ID!";
     @Autowired
     private PermissionRepository permissionRepository;
 
     @Override
+
     public PermissionVO create(PermissionVO permissionVO) throws Exception {
+
+        if (permissionVO == null) {
+            throw new RequiredObjectsNullException();
+        }
         String upperCasePermission = permissionVO.getDescription().toUpperCase();
         permissionVO.setDescription(upperCasePermission);
         PermissionModel entity = Mapper.parseObject(permissionVO, PermissionModel.class);
@@ -61,8 +68,12 @@ public class PermissionServices implements ServicesDatabaseContract<PermissionVO
     @Override
     public PermissionVO update(PermissionVO permissionVO) throws Exception {
 
+        if (permissionVO == null) {
+            throw new RequiredObjectsNullException();
+        }
         PermissionModel permissionId = permissionRepository.findById(permissionVO.getId())
-                .orElseThrow(() -> new RuntimeException("No records found for that ID!"));
+                .orElseThrow(() -> new PermissionNotFound(PERMISSION_NOT_FOUND_MESSAGE));
+
         PermissionModel updatedPermission = CheckIfNotNull.updateIfNotNull(permissionId, permissionVO);
         PermissionVO vo = Mapper.parseObject(permissionRepository.save(updatedPermission), PermissionVO.class);
         vo.add(linkTo(methodOn(PermissionController.class).findById(permissionVO.getId())).withSelfRel());
@@ -73,7 +84,7 @@ public class PermissionServices implements ServicesDatabaseContract<PermissionVO
     @Override
     public PermissionVO findById(UUID uuid) throws Exception {
         PermissionModel entity = permissionRepository.findById(uuid)
-                .orElseThrow(() -> new ProductNotFound("No record found by that ID!"));
+                .orElseThrow(() -> new PermissionNotFound(PERMISSION_NOT_FOUND_MESSAGE));
 
 
         PermissionVO vo = Mapper.parseObject(entity, PermissionVO.class);
@@ -87,7 +98,7 @@ public class PermissionServices implements ServicesDatabaseContract<PermissionVO
     public void delete(UUID uuid) throws Exception {
 
         PermissionModel entity = permissionRepository.findById(uuid)
-                .orElseThrow(() -> new RuntimeException("No record found by that ID!"));
+                .orElseThrow(() -> new PermissionNotFound(PERMISSION_NOT_FOUND_MESSAGE));
 
         permissionRepository.delete(entity);
 

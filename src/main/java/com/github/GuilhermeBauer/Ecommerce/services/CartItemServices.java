@@ -2,10 +2,12 @@ package com.github.GuilhermeBauer.Ecommerce.services;
 
 import com.github.GuilhermeBauer.Ecommerce.controller.CartItemController;
 import com.github.GuilhermeBauer.Ecommerce.data.vo.v1.CartItemVO;
+import com.github.GuilhermeBauer.Ecommerce.exceptions.CartItemNotFound;
 import com.github.GuilhermeBauer.Ecommerce.exceptions.InsufficientQuantityAvailable;
 import com.github.GuilhermeBauer.Ecommerce.exceptions.ProductNotFound;
+import com.github.GuilhermeBauer.Ecommerce.exceptions.RequiredObjectsNullException;
 import com.github.GuilhermeBauer.Ecommerce.mapper.Mapper;
-import com.github.GuilhermeBauer.Ecommerce.model.CartItem;
+import com.github.GuilhermeBauer.Ecommerce.model.CartItemModel;
 import com.github.GuilhermeBauer.Ecommerce.model.ProductModel;
 import com.github.GuilhermeBauer.Ecommerce.repository.CartItemRepository;
 import com.github.GuilhermeBauer.Ecommerce.repository.ProductRepository;
@@ -14,20 +16,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
 @Service
 public class CartItemServices implements ServicesDatabaseContract<CartItemVO> {
+
+    private static final String PRODUCT_NOT_FOUND_MESSAGE = "No product was found for that ID!";
+    private static final String CART_ITEM_NOT_FOUND_MESSAGE = "No cart item was found for that ID!";
+    private static final String INSUFFICIENT_AVAILABLE_QUANTITY_MESSAGE = "Don't have enough quantity available";
+    private static final String QUANTITY_MESSAGE = "Please type a quantity plus to 0!";
+
     @Autowired
     private CartItemRepository repository;
 
@@ -37,14 +44,16 @@ public class CartItemServices implements ServicesDatabaseContract<CartItemVO> {
     @Override
     public CartItemVO create(CartItemVO cartItemVO) throws Exception {
 
-        CartItem entity = Mapper.parseObject(cartItemVO, CartItem.class);
-        ProductModel productModel = productRepository.findById(cartItemVO.getProduct().getId())
-                .orElseThrow(() -> new ProductNotFound("No product found for that ID!"));
-
-        if (cartItemVO.getQuantity() == null || cartItemVO.getQuantity() <= 0) {
-            System.out.println("inside of IF");
-            throw new InsufficientQuantityAvailable("Please type a quantity plus to 0!");
+        if (cartItemVO == null) {
+            throw new RequiredObjectsNullException();
         }
+
+        cartItemHadQuantityAvailable(cartItemVO);
+
+        CartItemModel entity = Mapper.parseObject(cartItemVO, CartItemModel.class);
+        ProductModel productModel = productRepository.findById(cartItemVO.getProduct().getId())
+                .orElseThrow(() -> new ProductNotFound(PRODUCT_NOT_FOUND_MESSAGE));
+
 
         entity.setProduct(productModel);
 
@@ -57,33 +66,36 @@ public class CartItemServices implements ServicesDatabaseContract<CartItemVO> {
 
     }
 
+
     @Override
 
-    public Page<EntityModel<CartItemVO>> findAll(Pageable pageable) {
-        Page<CartItem> allCartItems = repository.findAll(pageable);
+    public Page<EntityModel<CartItemVO>> findAll(Pageable pageable) throws Exception {
+        Page<CartItemModel> allCartItems = repository.findAll(pageable);
         List<CartItemVO> cartItems = Mapper.parseObjectList(allCartItems.getContent(), CartItemVO.class);
-        List<EntityModel<CartItemVO>> collect = cartItems.stream()
-                .map(cartItemVO -> {
-                    try {
-                        Link selfLink = linkTo(
-                                methodOn(CartItemController.class).findById(cartItemVO.getId())).withSelfRel();
-                        return EntityModel.of(cartItemVO, selfLink);
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }).collect(Collectors.toList());
-        return new PageImpl<>(collect, pageable, allCartItems.getTotalElements());
+        List<EntityModel<CartItemVO>> cartItemEntities = new ArrayList<>();
+        for (CartItemVO cartItemVO : cartItems) {
+            Link selfLink = linkTo(
+                    methodOn(CartItemController.class)
+                            .findById(cartItemVO.getId())).withSelfRel();
+            EntityModel<CartItemVO> apply = EntityModel.of(cartItemVO, selfLink);
+            cartItemEntities.add(apply);
+        }
+
+
+        return new PageImpl<>(cartItemEntities, pageable, allCartItems.getTotalElements());
     }
 
     @Override
     public CartItemVO update(CartItemVO cartItemVO) throws Exception {
-
-        CartItem entity = repository.findById(cartItemVO.getId())
-                .orElseThrow(() -> new ProductNotFound("No records founds for that ID!"));
+        if (cartItemVO == null) {
+            throw new RequiredObjectsNullException();
+        }
+        CartItemModel entity = repository.findById(cartItemVO.getId())
+                .orElseThrow(() -> new CartItemNotFound(CART_ITEM_NOT_FOUND_MESSAGE));
 
         checkIfQuantityIsLess(cartItemVO, entity);
 
-        if (cartItemVO.getQuantity() != null && cartItemVO.getQuantity() > 1) {
+        if (cartItemVO.getQuantity() > 1) {
             entity.setQuantity(cartItemVO.getQuantity());
         }
         CartItemVO vo = Mapper.parseObject(repository.save(entity), CartItemVO.class);
@@ -93,30 +105,39 @@ public class CartItemServices implements ServicesDatabaseContract<CartItemVO> {
 
     @Override
     public CartItemVO findById(UUID uuid) throws Exception {
-        CartItem entity = repository.findById(uuid)
-                .orElseThrow(() -> new ProductNotFound("No records founds for that Id!"));
+        CartItemModel entity = repository.findById(uuid)
+                .orElseThrow(() -> new CartItemNotFound(CART_ITEM_NOT_FOUND_MESSAGE));
         CartItemVO vo = Mapper.parseObject(entity, CartItemVO.class);
-        vo.add(linkTo(methodOn(CartItemController.class).findById(uuid)).withSelfRel());
+        Link selfLink = linkTo(methodOn(CartItemController.class).findById(uuid)).withSelfRel();
+        vo.add(selfLink);
         return vo;
     }
 
     @Override
     public void delete(UUID uuid) throws Exception {
 
-        CartItem entity = repository.findById(uuid)
-                .orElseThrow(() -> new ProductNotFound("No records founds for that Id!"));
+        CartItemModel entity = repository.findById(uuid)
+                .orElseThrow(() -> new ProductNotFound(PRODUCT_NOT_FOUND_MESSAGE));
 
         repository.delete(entity);
 
     }
 
-    public void checkIfQuantityIsLess(CartItemVO cartItemVO, CartItem cartItem) {
-        if (cartItemVO != null
-                && cartItemVO.getQuantity() != null
-                && cartItem.getProduct() != null
-                && cartItem.getProduct().getQuantity() != null
-                && cartItemVO.getQuantity() > cartItem.getProduct().getQuantity()) {
-            throw new InsufficientQuantityAvailable("Don't have enough quantity available");
+    public void cartItemHadQuantityAvailable(CartItemVO cartItemVO) {
+        if (cartItemVO.getQuantity() <= 0) {
+            throw new InsufficientQuantityAvailable(QUANTITY_MESSAGE);
         }
     }
+
+    public void checkIfQuantityIsLess(CartItemVO cartItemVO, CartItemModel cartItem) {
+        if (cartItemVO == null || cartItemVO.getQuantity() == null
+                || cartItem == null || cartItem.getProduct() == null
+                || cartItem.getProduct().getQuantity() == null) {
+            throw new RequiredObjectsNullException();
+        }
+        if (cartItemVO.getQuantity() > cartItem.getProduct().getQuantity()) {
+            throw new InsufficientQuantityAvailable(INSUFFICIENT_AVAILABLE_QUANTITY_MESSAGE);
+        }
+    }
+
 }

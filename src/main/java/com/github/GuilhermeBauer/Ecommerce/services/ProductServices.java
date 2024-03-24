@@ -19,21 +19,20 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Service
 public class ProductServices implements ServicesDatabaseContract<ProductVO> {
-
+    private static final String PRODUCT_NOT_FOUND_MESSAGE = "No product was found for that ID!";
+    private static final String PRODUCT_NOT_AVAILABLE_MESSAGE = "That product is not available!";
+    private static final String CATEGORY_NOT_FOUND_MESSAGE = "No category was found for that Product!";
     @Autowired
     private ProductRepository repository;
 
@@ -83,14 +82,14 @@ public class ProductServices implements ServicesDatabaseContract<ProductVO> {
         }
 
         if (productVO.getCategoryModel() == null) {
-            throw new CategoryNotFound("No category was found for that Product!");
+            throw new CategoryNotFound(CATEGORY_NOT_FOUND_MESSAGE);
         }
 
         CategoryModel categoryName = categoryRepository.findByName(productVO.getCategoryModel().getName().toUpperCase());
         productVO.setCategoryModel(categoryName);
 
         ProductModel productId = repository.findById(productVO.getId())
-                .orElseThrow(() -> new ProductNotFound("No product was found for that ID!"));
+                .orElseThrow(() -> new ProductNotFound(PRODUCT_NOT_FOUND_MESSAGE));
 
         ProductModel updatedProduct = CheckIfNotNull.updateIfNotNull(productId, productVO);
 
@@ -106,7 +105,7 @@ public class ProductServices implements ServicesDatabaseContract<ProductVO> {
     public ProductVO findById(UUID uuid) throws Exception {
 
         ProductModel productId = repository.findById(uuid)
-                .orElseThrow(() -> new ProductNotFound("No product was found for that ID!"));
+                .orElseThrow(() -> new ProductNotFound(PRODUCT_NOT_FOUND_MESSAGE));
 
         ProductVO vo = Mapper.parseObject(productId, ProductVO.class);
         vo.add(linkTo(methodOn(ProductsController.class).findById(uuid)).withSelfRel());
@@ -116,7 +115,7 @@ public class ProductServices implements ServicesDatabaseContract<ProductVO> {
     @Override
     public void delete(UUID uuid) throws Exception {
         ProductModel productId = repository.findById(uuid)
-                .orElseThrow(() -> new ProductNotFound("No product was found for that ID!"));
+                .orElseThrow(() -> new ProductNotFound(PRODUCT_NOT_FOUND_MESSAGE));
         repository.delete(productId);
 
 
@@ -125,7 +124,7 @@ public class ProductServices implements ServicesDatabaseContract<ProductVO> {
     public void isAvailable(ProductModel productModel) {
         if (productModel.getQuantity() <= 0) {
             productModel.setAvailable(false);
-            throw new ProductNotAvailable("That product is not available!");
+            throw new ProductNotAvailable(PRODUCT_NOT_AVAILABLE_MESSAGE);
         }
         productModel.setAvailable(true);
     }

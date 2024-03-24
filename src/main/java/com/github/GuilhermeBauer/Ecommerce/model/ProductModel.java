@@ -93,7 +93,7 @@ public class ProductModel implements Serializable {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 

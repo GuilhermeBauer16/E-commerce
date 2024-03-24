@@ -1,4 +1,4 @@
-package com.github.GuilhermeBauer.Ecommerce.controller;
+package com.github.GuilhermeBauer.Ecommerce.controller.security;
 
 import com.github.GuilhermeBauer.Ecommerce.data.vo.v1.user.UserVO;
 import com.github.GuilhermeBauer.Ecommerce.services.AuthServices;

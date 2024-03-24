@@ -24,6 +24,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.EntityModel;
 import unitTests.mocks.MockProduct;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -46,7 +47,6 @@ public class ProductServicesTests {
     private ProductRepository productRepository;
 
     @Mock
-
     private CategoryRepository categoryRepository;
 
     @BeforeEach
@@ -55,8 +55,7 @@ public class ProductServicesTests {
         MockitoAnnotations.openMocks(this);
     }
 
-    // Testing creates possibilities
-
+    // Testing create possibilities
     @Test
     void testCreateWithHateoasContainsTheLink() throws Exception {
         ProductModel entity = mockProduct.mockProductEntity(
@@ -73,7 +72,7 @@ public class ProductServicesTests {
         assertNotNull(result);
         assertNotNull(result.getId());
         assertNotNull(result.getLinks());
-        assertTrue(result.toString().contains("links: [</product/v1/270c51f2-0acf-4ca6-bfc3-1c654f0ddd17>;rel=\"self\"]"));
+        assertTrue(result.toString().contains("links: [</api/product/270c51f2-0acf-4ca6-bfc3-1c654f0ddd17>;rel=\"self\"]"));
         assertEquals("Air max",result.getName());
         assertEquals("the shoes",result.getDescription());
         assertEquals("nike", result.getBranch());
@@ -117,7 +116,7 @@ public class ProductServicesTests {
         assertNotNull(result);
         assertNotNull(result.getId());
         assertNotNull(result.getLinks());
-        assertTrue(result.toString().contains("links: [</product/v1/270c51f2-0acf-4ca6-bfc3-1c654f0ddd17>;rel=\"self\"]"));
+        assertTrue(result.toString().contains("links: [</api/product/270c51f2-0acf-4ca6-bfc3-1c654f0ddd17>;rel=\"self\"]"));
         assertEquals("Air max",result.getName());
         assertEquals("the shoes",result.getDescription());
         assertEquals("nike", result.getBranch());
@@ -167,7 +166,7 @@ public class ProductServicesTests {
         assertNotNull(product1);
         assertNotNull(product1.getContent().getId());
         assertNotNull(product1.getContent().getLinks());
-        assertTrue(product1.toString().contains("links: [</product/v1/270c51f2-0acf-4ca6-bfc3-1c654f0ddd17>;rel=\"self\"]"));
+        assertTrue(product1.toString().contains("links: [</api/product/270c51f2-0acf-4ca6-bfc3-1c654f0ddd17>;rel=\"self\"]"));
         assertEquals("Air max",product1.getContent().getName());
         assertEquals("the shoes",product1.getContent().getDescription());
         assertEquals("nike", product1.getContent().getBranch());
@@ -180,7 +179,7 @@ public class ProductServicesTests {
         assertNotNull(product7);
         assertNotNull(product7.getContent().getId());
         assertNotNull(product7.getContent().getLinks());
-        assertTrue(product7.toString().contains("links: [</product/v1/270c51f2-0acf-4ca6-bfc3-1c654f0ddd17>;rel=\"self\"]"));
+        assertTrue(product7.toString().contains("links: [</api/product/270c51f2-0acf-4ca6-bfc3-1c654f0ddd17>;rel=\"self\"]"));
         assertEquals("Air max",product7.getContent().getName());
         assertEquals("the shoes",product7.getContent().getDescription());
         assertEquals("nike", product7.getContent().getBranch());
@@ -193,7 +192,7 @@ public class ProductServicesTests {
         assertNotNull(product10);
         assertNotNull(product10.getContent().getId());
         assertNotNull(product10.getContent().getLinks());
-        assertTrue(product10.toString().contains("links: [</product/v1/270c51f2-0acf-4ca6-bfc3-1c654f0ddd17>;rel=\"self\"]"));
+        assertTrue(product10.toString().contains("links: [</api/product/270c51f2-0acf-4ca6-bfc3-1c654f0ddd17>;rel=\"self\"]"));
         assertEquals("Air max",product10.getContent().getName());
         assertEquals("the shoes",product10.getContent().getDescription());
         assertEquals("nike", product10.getContent().getBranch());
@@ -208,6 +207,7 @@ public class ProductServicesTests {
 
     @Test
     void testFindByIdIfHaveHateoasLink() throws Exception {
+        System.out.println(new Date());
         UUID productID = UUID.fromString("270c51f2-0acf-4ca6-bfc3-1c654f0ddd17");
         ProductModel entity = mockProduct.mockProductEntity(productID);
         entity.setId(productID);
@@ -216,7 +216,8 @@ public class ProductServicesTests {
         assertNotNull(result);
         assertNotNull(result.getId());
         assertNotNull(result.getLinks());
-        assertTrue(result.toString().contains("links: [</product/v1/270c51f2-0acf-4ca6-bfc3-1c654f0ddd17>;rel=\"self\"]"));
+        System.out.println("Links: " + result.getLinks());
+        assertTrue(result.toString().contains("links: [</api/product/270c51f2-0acf-4ca6-bfc3-1c654f0ddd17>;rel=\"self\"]"));
         assertEquals("Air max",result.getName());
         assertEquals("the shoes",result.getDescription());
         assertEquals("nike", result.getBranch());

@@ -7,7 +7,7 @@ import java.util.Objects;
 import java.util.UUID;
 @Entity
 @Table(name = "cart_item")
-public class CartItem implements Serializable {
+public class CartItemModel implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -20,7 +20,7 @@ public class CartItem implements Serializable {
     private ProductModel product;
     private Integer quantity;
 
-    public CartItem() {
+    public CartItemModel() {
     }
 
     public UUID getId() {
@@ -51,7 +51,7 @@ public class CartItem implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CartItem cartItem = (CartItem) o;
+        CartItemModel cartItem = (CartItemModel) o;
         return quantity == cartItem.quantity && Objects.equals(id, cartItem.id) && Objects.equals(product, cartItem.product);
     }
 

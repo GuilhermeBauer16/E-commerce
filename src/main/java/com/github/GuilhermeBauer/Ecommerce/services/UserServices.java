@@ -1,6 +1,8 @@
 package com.github.GuilhermeBauer.Ecommerce.services;
 
+import com.github.GuilhermeBauer.Ecommerce.controller.security.UserController;
 import com.github.GuilhermeBauer.Ecommerce.data.vo.v1.user.UserVO;
+import com.github.GuilhermeBauer.Ecommerce.exceptions.RequiredObjectsNullException;
 import com.github.GuilhermeBauer.Ecommerce.mapper.Mapper;
 import com.github.GuilhermeBauer.Ecommerce.model.PermissionModel;
 import com.github.GuilhermeBauer.Ecommerce.model.UserModel;
@@ -14,8 +16,14 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @Service
 public class UserServices implements UserDetailsService {
+
+    private static final String USERNAME_NOT_FOUND_MESSAGE = "Not records founds for that username!";
+    private static final String ILLEGAL_ARGUMENT_MESSAGE = "UserVO or its permission is null";
 
     @Autowired
     private UserRepository userRepository;
@@ -34,29 +42,29 @@ public class UserServices implements UserDetailsService {
     public UserVO create(UserVO userVO) throws Exception {
 
         if (userVO == null || userVO.getPermission() == null || userVO.getPermission().getDescription() == null) {
-            throw new IllegalArgumentException("UserVO or its permission is null");
+            throw new IllegalArgumentException(ILLEGAL_ARGUMENT_MESSAGE);
         }
         userVO.setPassword(encoder.encode(userVO.getPassword()));
         PermissionModel permission = permissionRepository.findById(userVO.getPermission().getId()).orElseThrow(() -> new RuntimeException());
-//        PermissionModel permission = permissionRepository.findByDescription(userVO.getPermission().getDescription().toUpperCase());
-        System.out.println(permission);
         userVO.setPermission(permission);
         UserModel entity = Mapper.parseObject(userVO, UserModel.class);
         UserVO vo = Mapper.parseObject(userRepository.save(entity), UserVO.class);
-//        vo.add(linkTo(methodOn(UserController.class).findById(userVO.getId())).withSelfRel());
+        vo.add(linkTo(methodOn(UserController.class).findById(userVO.getId())).withSelfRel());
         return vo;
     }
 
 
     public UserVO update(UserVO userVO) throws Exception {
-
+        if (userVO == null){
+            throw new RequiredObjectsNullException();
+        }
         UserModel username = userRepository.findByUsername(userVO.getUsername());
-        if( username == null){
-            throw new UsernameNotFoundException("Not records founds for that username!");
+        if (username == null) {
+            throw new UsernameNotFoundException(USERNAME_NOT_FOUND_MESSAGE);
         }
         UserModel updatedUser = CheckIfNotNull.updateIfNotNull(username, userVO);
         UserVO vo = Mapper.parseObject(userRepository.save(updatedUser), UserVO.class);
-//        vo.add(linkTo(methodOn(UserController.class).findById(userVO.getId())).withSelfRel());
+        vo.add(linkTo(methodOn(UserController.class).findById(userVO.getId())).withSelfRel());
         return vo;
     }
 
@@ -64,11 +72,12 @@ public class UserServices implements UserDetailsService {
     public UserVO findByName(String username) throws Exception {
 
         if (username.isEmpty()) {
-            throw new RuntimeException("The username must not be null");
+            throw new UsernameNotFoundException(USERNAME_NOT_FOUND_MESSAGE);
         }
         var entity = userRepository.findByUsername(username);
         return Mapper.parseObject(entity, UserVO.class);
     }
+
 
     public void delete(String username) throws Exception {
         UserModel user = userRepository.findByUsername(username);
@@ -85,7 +94,7 @@ public class UserServices implements UserDetailsService {
 
         } else {
 
-            throw new UsernameNotFoundException("Username: " + username + "not found!");
+            throw new UsernameNotFoundException(USERNAME_NOT_FOUND_MESSAGE);
 
 
         }

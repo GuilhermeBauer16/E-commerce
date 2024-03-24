@@ -19,7 +19,9 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
     @ExceptionHandler({CategoryNotFound.class,
             ProductNotFound.class,
             ProductNotAvailable.class,
-            InsufficientQuantityAvailable.class})
+            InsufficientQuantityAvailable.class,
+            CartItemNotFound.class,
+            PermissionNotFound.class})
     public final ResponseEntity<ExceptionResponse> handlerNotFoundException(
             Exception ex,
             WebRequest webRequest) {
@@ -45,21 +47,21 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
                 new Date()
 
         );
-        return new ResponseEntity <>(exceptionResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(InvalidJwtAuthenticationException.class)
-    public  final ResponseEntity<ExceptionResponse> handleInvalidJwtAuthenticationExceptions(
+    public final ResponseEntity<ExceptionResponse> handleInvalidJwtAuthenticationExceptions(
             Exception ex,
             WebRequest request
-    ){
+    ) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(
                 ex.getMessage(),
                 request.getDescription(false),
                 new Date()
-                );
+        );
 
-        return  new ResponseEntity<>(exceptionResponse, HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.FORBIDDEN);
 
     }
 

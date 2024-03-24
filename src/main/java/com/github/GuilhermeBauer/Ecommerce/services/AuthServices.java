@@ -17,6 +17,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthServices {
 
+    private static final String USERNAME_NOT_FOUND_MESSAGE = "Not records founds for that username!";
+    private static final String BAD_CREDENTIALS_MESSAGE = "Invalid username/password supplied";
+
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
@@ -35,16 +38,13 @@ public class AuthServices {
             var user = userRepository.findByUsername(username);
             passwordEncoder.matches(password, user.getPassword());
             var tokenResponse = new TokenVO();
-            if (user != null) {
-                tokenResponse = jwtTokenProvider.createAccessToken(username, user.getRoles());
-            } else {
-                throw new UsernameNotFoundException("Username: " + username + " not found!");
-            }
-            System.out.println(user.getPassword());
+            checkIfUserIsnull(user.getUsername());
+            tokenResponse = jwtTokenProvider.createAccessToken(username, user.getRoles());
+
             return ResponseEntity.ok(tokenResponse);
 
         } catch (Exception e) {
-            throw new BadCredentialsException("Invalid username/password supplied");
+            throw new BadCredentialsException(BAD_CREDENTIALS_MESSAGE);
         }
     }
 
@@ -57,8 +57,18 @@ public class AuthServices {
         if (user != null) {
             tokenResponse = jwtTokenProvider.createRefreshToken(refreshToken);
         } else {
-            throw new UsernameNotFoundException("Username: " + username + " not found!");
+            throw new UsernameNotFoundException(USERNAME_NOT_FOUND_MESSAGE);
         }
         return ResponseEntity.ok(tokenResponse);
+    }
+
+    public void checkIfUserIsnull(String username){
+        UserModel user = userRepository.findByUsername(username);
+
+        if (user == null){
+            throw new UsernameNotFoundException(USERNAME_NOT_FOUND_MESSAGE);
+        }
+
+
     }
 }

@@ -15,13 +15,11 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -29,6 +27,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Service
 public class CategoryServices implements ServicesDatabaseContract<CategoryVO> {
+
+    private static final String CATEGORY_NOT_FOUND_MESSAGE = "No category was found for ID!";
     @Autowired
     private CategoryRepository repository;
 
@@ -70,7 +70,7 @@ public class CategoryServices implements ServicesDatabaseContract<CategoryVO> {
             throw new RequiredObjectsNullException();
         }
         CategoryModel entity = repository.findById(categoryVO.getId())
-                .orElseThrow(() -> new CategoryNotFound("No category was found for that ID!"));
+                .orElseThrow(() -> new CategoryNotFound(CATEGORY_NOT_FOUND_MESSAGE));
 
         CategoryModel updatedCategory = CheckIfNotNull.updateIfNotNull(entity, categoryVO);
         CategoryVO vo = Mapper.parseObject(repository.save(updatedCategory), CategoryVO.class);
@@ -82,7 +82,7 @@ public class CategoryServices implements ServicesDatabaseContract<CategoryVO> {
     public CategoryVO findById(UUID uuid) throws Exception {
 
         CategoryModel entity = repository.findById(uuid)
-                .orElseThrow(() -> new CategoryNotFound("No category was found for that ID!"));
+                .orElseThrow(() -> new CategoryNotFound(CATEGORY_NOT_FOUND_MESSAGE));
         CategoryVO vo = Mapper.parseObject(entity, CategoryVO.class);
         vo.add(linkTo(methodOn(CategoryController.class).findById(uuid)).withSelfRel());
         return vo;
@@ -92,7 +92,7 @@ public class CategoryServices implements ServicesDatabaseContract<CategoryVO> {
     @Override
     public void delete(UUID uuid) throws Exception {
         CategoryModel entity = repository.findById(uuid)
-                .orElseThrow(() -> new CategoryNotFound("No category was found for that ID!"));
+                .orElseThrow(() -> new CategoryNotFound(CATEGORY_NOT_FOUND_MESSAGE));
         repository.delete(entity);
 
 

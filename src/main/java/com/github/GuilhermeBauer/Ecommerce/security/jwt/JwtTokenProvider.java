@@ -25,12 +25,13 @@ import java.util.List;
 @Service
 public class JwtTokenProvider {
 
+    private static final String EXPIRED_TOKEN_MESSAGE = "Expired or invalid JWT token!";
     @Value("${security.jwt.token.secret-key:secret}")
     private String secretKey = "secret";
 
 
     @Value("${security.jwt.token.expire-length:3600000}")
-    private long validityInMilliseconds = 3600000;
+    private  final long validityInMilliseconds = 3600000;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -99,8 +100,7 @@ public class JwtTokenProvider {
     private DecodedJWT decodedToken(String token) {
         Algorithm alg = Algorithm.HMAC256(secretKey.getBytes());
         JWTVerifier verifier = JWT.require(alg).build();
-        DecodedJWT decodedJWT = verifier.verify(token);
-        return decodedJWT;
+        return verifier.verify(token);
     }
 
     public String resolveToken(HttpServletRequest req) {
@@ -121,7 +121,7 @@ public class JwtTokenProvider {
             return true;
 
         } catch (Exception e) {
-            throw new InvalidJwtAuthenticationException("Expired or invalid JWT token!");
+            throw new InvalidJwtAuthenticationException(EXPIRED_TOKEN_MESSAGE);
         }
 
     }

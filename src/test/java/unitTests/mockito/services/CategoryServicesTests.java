@@ -41,6 +41,8 @@ public class CategoryServicesTests {
     @Mock
     private CategoryRepository categoryRepository;
 
+
+
     @BeforeEach
     void setUpMocks() {
         mockCategory = new MockCategory();
@@ -66,7 +68,8 @@ public class CategoryServicesTests {
         assertNotNull(result);
         assertNotNull(result.getId());
         assertNotNull(result.getLinks());
-        assertTrue(result.toString().contains("links: [</category/270c51f2-0acf-4ca6-bfc3-1c654f0ddd17>;rel=\"self\"]"));
+        System.out.println(result.getLinks());
+        assertTrue(result.toString().contains("links: [</api/category/270c51f2-0acf-4ca6-bfc3-1c654f0ddd17>;rel=\"self\"]"));
         assertEquals("SHOES", result.getName());
     }
 
@@ -104,7 +107,7 @@ public class CategoryServicesTests {
         assertNotNull(result);
         assertNotNull(result.getId());
         assertNotNull(result.getLinks());
-        assertTrue(result.toString().contains("links: [</category/270c51f2-0acf-4ca6-bfc3-1c654f0ddd17>;rel=\"self\"]"));
+        assertTrue(result.toString().contains("links: [</api/category/270c51f2-0acf-4ca6-bfc3-1c654f0ddd17>;rel=\"self\"]"));
         assertEquals("SHOES", result.getName());
     }
 
@@ -135,22 +138,22 @@ public class CategoryServicesTests {
         assertNotNull(category1);
         assertNotNull(category1.getLinks());
         assertNotNull(category1.getContent().getId());
-        assertTrue(category1.toString().contains("links: [</category/270c51f2-0acf-4ca6-bfc3-1c654f0ddd17>;rel=\"self\"] "));
+        assertTrue(category1.toString().contains("links: [</api/category/270c51f2-0acf-4ca6-bfc3-1c654f0ddd17>;rel=\"self\"]"));
         assertNotNull(category1.getContent().getName(), "SHOES");
 
         EntityModel<CategoryVO> category7 = allCategory.getContent().get(7);
-        assertNotNull(category1);
-        assertNotNull(category1.getLinks());
-        assertNotNull(category1.getContent().getId());
-        assertTrue(category1.toString().contains("links: [</category/270c51f2-0acf-4ca6-bfc3-1c654f0ddd17>;rel=\"self\"] "));
-        assertNotNull(category1.getContent().getName(), "SHOES");
+        assertNotNull(category7);
+        assertNotNull(category7.getLinks());
+        assertNotNull(category7.getContent().getId());
+        assertTrue(category7.toString().contains("links: [</api/category/270c51f2-0acf-4ca6-bfc3-1c654f0ddd17>;rel=\"self\"]"));
+        assertNotNull(category7.getContent().getName(), "SHOES");
 
         EntityModel<CategoryVO> category10 = allCategory.getContent().get(10);
         assertNotNull(category10);
-        assertNotNull(category1.getLinks());
-        assertNotNull(category1.getContent().getId());
-        assertTrue(category1.toString().contains("links: [</category/270c51f2-0acf-4ca6-bfc3-1c654f0ddd17>;rel=\"self\"] "));
-        assertNotNull(category1.getContent().getName(), "SHOES");
+        assertNotNull(category10.getLinks());
+        assertNotNull(category10.getContent().getId());
+        assertTrue(category10.toString().contains("links: [</api/category/270c51f2-0acf-4ca6-bfc3-1c654f0ddd17>;rel=\"self\"]"));
+        assertNotNull(category10.getContent().getName(), "SHOES");
 
     }
 
@@ -184,7 +187,7 @@ public class CategoryServicesTests {
         assertNotNull(result);
         assertNotNull(result.getId());
         assertNotNull(result.getLinks());
-        assertTrue(result.toString().contains("links: [</category/270c51f2-0acf-4ca6-bfc3-1c654f0ddd17>;rel=\"self\"]"));
+        assertTrue(result.toString().contains("links: [</api/category/270c51f2-0acf-4ca6-bfc3-1c654f0ddd17>;rel=\"self\"]"));
         assertEquals("SHOES", result.getName());
 
     }

@@ -1,4 +1,4 @@
-package com.github.GuilhermeBauer.Ecommerce.controller;
+package com.github.GuilhermeBauer.Ecommerce.controller.security;
 
 import com.github.GuilhermeBauer.Ecommerce.controller.contract.ControllerDatabasesContract;
 import com.github.GuilhermeBauer.Ecommerce.data.vo.v1.user.PermissionVO;
@@ -31,7 +31,7 @@ public class PermissionController implements ControllerDatabasesContract<Permiss
     @Override
     @GetMapping
     public ResponseEntity<Page<EntityModel<PermissionVO>>> findAll(
-            @PageableDefault(page = 0, size = 20, sort = "description")Pageable pageable) throws Exception {
+            @PageableDefault(page = 0, size = 20, sort = "description") Pageable pageable) throws Exception {
         Page<EntityModel<PermissionVO>> allPermissions = permissionServices.findAll(pageable);
         return ResponseEntity.ok(allPermissions);
     }
@@ -45,7 +45,7 @@ public class PermissionController implements ControllerDatabasesContract<Permiss
 
     @Override
     @GetMapping(value = "/{uuid}")
-    public ResponseEntity<PermissionVO> findById(@PathVariable(value="uuid")UUID uuid) throws Exception {
+    public ResponseEntity<PermissionVO> findById(@PathVariable(value = "uuid") UUID uuid) throws Exception {
 
         PermissionVO permission = permissionServices.findById(uuid);
         return ResponseEntity.ok(permission);
@@ -53,7 +53,7 @@ public class PermissionController implements ControllerDatabasesContract<Permiss
 
     @Override
     @DeleteMapping(value = "/{uuid}")
-    public ResponseEntity<?> delete(@PathVariable(value= "uuid") UUID uuid) throws Exception {
+    public ResponseEntity<?> delete(@PathVariable(value = "uuid") UUID uuid) throws Exception {
         permissionServices.delete(uuid);
         return ResponseEntity.noContent().build();
     }

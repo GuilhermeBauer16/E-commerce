@@ -24,8 +24,8 @@ public class CartItemController implements ControllerDatabasesContract<CartItemV
     private CartItemServices cartItemServices;
 
     @Override
-    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE,
-    consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
     public ResponseEntity<CartItemVO> create(@RequestBody CartItemVO cartItemVO) throws Exception {
         CartItemVO cartItem = cartItemServices.create(cartItemVO);
@@ -35,7 +35,7 @@ public class CartItemController implements ControllerDatabasesContract<CartItemV
     @Override
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<EntityModel<CartItemVO>>> findAll(
-            @PageableDefault(size = 20,page = 0, sort = "quantity") Pageable pageable) {
+            @PageableDefault(size = 20,page = 0, sort = "quantity") Pageable pageable) throws Exception {
         Page<EntityModel<CartItemVO>> allCartItems = cartItemServices.findAll(pageable);
         return ResponseEntity.ok(allCartItems);
     }
