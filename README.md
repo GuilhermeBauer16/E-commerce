@@ -3,7 +3,7 @@
 the user will log in and use the E-commerce functions like buying a product and adding that product to a cart shopping.   
 
          
-## Working example
+## Working example   
 
 ![Screenshot from 2024-03-24 18-40-13](https://github.com/GuilhermeBauer16/E-commerce/assets/123701893/13931538-892c-4ac8-87ba-a28e28c52207)
 
