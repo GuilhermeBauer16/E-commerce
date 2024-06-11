@@ -36,9 +36,10 @@ jobs:
       run: docker compose build
 
     - name: Push to Docker Hub Container Registry
+
       run: |
-        docker tag ecommerce:latest ${{ secrets.DOCKER_USERNAME }}/ecommerce:latest
-        docker tag ecommerce:latest ${{ secrets.DOCKER_USERNAME }}/ecommerce:${{ github.run_id }}
+        docker tag ecommerce:latest ${{ secrets.DOCKER_USERNAME }}/ecommerce_app:latest
+        docker tag ecommerce:latest ${{ secrets.DOCKER_USERNAME }}/ecommerce_app:${{ github.run_id }}
         
-        docker push ${{ secrets.DOCKER_USERNAME }}/ecommerce:latest
-        docker push ${{ secrets.DOCKER_USERNAME }}/ecommerce:${{ github.run_id }}
+        docker push ${{ secrets.DOCKER_USERNAME }}/ecommerce_app:latest
+        docker push ${{ secrets.DOCKER_USERNAME }}/ecommerce_app:${{ github.run_id }}
