@@ -6,31 +6,31 @@ services:
     restart: always
     environment:
       TZ: America/Sao_Paulo
-      MYSQL_ROOT_PASSWORD: docker
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_USER: docker
-      MYSQL_PASSWORD: docker
-      MYSQL_DATABASE: E_commerce
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
       MYSQL_ROOT_HOST: '%'
-      MYSQL_TCP_PORT: 3308
+      MYSQL_TCP_PORT: ${DB_PORT}
     ports:
-      - 3308:3308
+      - ${DB_PORT}:${DB_PORT}
 
     expose:
-      - 3308
+      - ${DB_PORT}
 
     networks:
       - ecommerce-network
 
   ecommerce:
-    image: ecommerce
+    image: guilhermebauer/ecommerce_app
     container_name: ecommerce_app
     build: .
     restart: always
     environment:
       TZ: America/Sao_Paulo
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3308/E_commerce?useSSL=false&useTimezone=true&serverTimezone=UTC&enabledTLSProtocols=TLSv1.2
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: docker
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:${DB_PORT}/${DB_NAME}?useSSL=false&useTimezone=true&serverTimezone=UTC&enabledTLSProtocols=TLSv1.2
+      SPRING_DATASOURCE_USERNAME: ${DB_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
 
     command: mvn spring-boot:run
 
