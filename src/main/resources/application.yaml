@@ -8,8 +8,9 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/E_commerce?useTimezone=true&serverTimezone=UTC
-    username: ${USER_DATABASE}
-    password: ${USER_PASSWORD}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
   jpa:
     open-in-view: false
     hibernate:
