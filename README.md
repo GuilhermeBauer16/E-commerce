@@ -80,7 +80,9 @@ In that project, I learned how to use Spring Security to create a JWT(JSON Web T
 * <span style="color:red;"> But remember, for Docker to work, you need to have Docker installed on your machine. Here is the link to the official documentation to install Docker: [Docker Installation Guide](https://docs.docker.com/get-docker/)</span>
 
 ## Swagger
-* link: `http://localhost:8080/swagger-ui/index.html`
+
+* [Swagger Documentation](http://localhost:8080/swagger-ui/index.html)
+  
 ## Author
  www.linkedin.com/in/guilherme-bauer-desenvolvedor
 
