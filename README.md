@@ -1,6 +1,6 @@
 # E-commerce              
 [![Continuous Integration with Github, Github Actions, and Docker Hub](https://github.com/GuilhermeBauer16/E-commerce/actions/workflows/continuous-integration.yml/badge.svg?event=label)](https://github.com/GuilhermeBauer16/E-commerce/actions/workflows/continuous-integration.yml)
-## Objective                  
+## Objective                     
 the user will log in and use the E-commerce functions like buying a product and adding that product to a cart shopping.          
     
          
